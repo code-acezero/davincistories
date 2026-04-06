@@ -1,27 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-export function useScrollReveal<T extends HTMLElement>(direction: "up" | "left" | "right" = "up") {
-  const ref = useRef<T>(null);
-
+export function useScrollReveal() {
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const className = direction === "left" ? "reveal-left" : direction === "right" ? "reveal-right" : "reveal-up";
-    el.classList.add(className);
-
+    const elements = document.querySelectorAll(".reveal-up, .reveal-left, .reveal-right");
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("revealed");
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+          }
+        });
       },
       { threshold: 0.15 }
     );
-
-    observer.observe(el);
+    elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [direction]);
-
-  return ref;
+  }, []);
 }
+
+export default useScrollReveal;
