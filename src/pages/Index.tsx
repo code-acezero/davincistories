@@ -1,14 +1,16 @@
 import { useState, useCallback } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import CategoriesSection from "@/components/CategoriesSection";
-import TeamSection from "@/components/TeamSection";
-import ServicesSection from "@/components/ServicesSection";
-import PortfolioSection from "@/components/PortfolioSection";
-import Footer from "@/components/Footer";
 import LoadingScreen from "@/components/LoadingScreen";
 import MusicPlayer from "@/components/MusicPlayer";
+import { lazy, Suspense } from "react";
+
+const AboutSection = lazy(() => import("@/components/AboutSection"));
+const CategoriesSection = lazy(() => import("@/components/CategoriesSection"));
+const TeamSection = lazy(() => import("@/components/TeamSection"));
+const ServicesSection = lazy(() => import("@/components/ServicesSection"));
+const PortfolioSection = lazy(() => import("@/components/PortfolioSection"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 const Index = () => {
   const [entered, setEntered] = useState(false);
@@ -27,13 +29,17 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <AboutSection />
-        <CategoriesSection />
-        <TeamSection />
-        <ServicesSection />
-        <PortfolioSection />
+        <Suspense fallback={null}>
+          <AboutSection />
+          <CategoriesSection />
+          <TeamSection />
+          <ServicesSection />
+          <PortfolioSection />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
       <MusicPlayer />
       <BackToTop />
     </>
@@ -50,7 +56,7 @@ const BackToTop = () => {
       const p = Math.round((window.scrollY / scrollEnd) * 100);
       setPercent(p);
       setShow(p > 5);
-    });
+    }, { passive: true });
   }
 
   if (!show) return null;
@@ -58,7 +64,7 @@ const BackToTop = () => {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="fixed bottom-5 left-5 z-[100] w-12 h-12 rounded-full bg-primary text-primary-foreground grid place-content-center text-xs font-medium"
+      className="fixed bottom-5 left-5 z-[100] w-12 h-12 rounded-full bg-primary text-primary-foreground grid place-content-center text-xs font-medium btn-glow"
     >
       {percent}%
     </button>
