@@ -55,7 +55,6 @@ const MusicManager = () => {
         <h1 className="text-2xl font-recoleta flex items-center gap-2"><Music size={24} /> Music Manager</h1>
       </div>
 
-      {/* Add track form */}
       <div className="glass-card rounded-xl p-6 space-y-4">
         <h3 className="font-medium">Add Track</h3>
         <div className="grid sm:grid-cols-2 gap-4">
@@ -68,20 +67,19 @@ const MusicManager = () => {
             </SelectContent>
           </Select>
         </div>
-        <ImageUploader
-          bucket="media"
-          folder="music"
-          onUpload={(url) => setFileUrl(url)}
-          accept="audio/*"
-          label={fileUrl ? "Audio uploaded ✓" : "Upload audio file"}
-        />
-        {fileUrl && <p className="text-xs text-muted-foreground truncate">{fileUrl}</p>}
+        <div>
+          <ImageUploader
+            label={fileUrl ? "Audio uploaded ✓" : "Upload audio file"}
+            value={fileUrl}
+            onChange={(url) => setFileUrl(url)}
+            bucket="media"
+          />
+        </div>
         <Button onClick={() => addTrack.mutate()} disabled={addTrack.isPending || !title || !fileUrl}>
           <Plus size={16} className="mr-1" /> Add Track
         </Button>
       </div>
 
-      {/* Track list */}
       <div className="space-y-2">
         {isLoading && <p className="text-muted-foreground">Loading...</p>}
         {tracks?.map((track) => (

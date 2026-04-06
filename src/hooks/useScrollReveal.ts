@@ -11,10 +11,21 @@ export function useScrollReveal() {
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
     elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    
+    // Re-observe after lazy load
+    const mutation = new MutationObserver(() => {
+      document.querySelectorAll(".reveal-up:not(.revealed), .reveal-left:not(.revealed), .reveal-right:not(.revealed)")
+        .forEach(el => observer.observe(el));
+    });
+    mutation.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      mutation.disconnect();
+    };
   }, []);
 }
 
