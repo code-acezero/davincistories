@@ -261,6 +261,36 @@ export type Database = {
         }
         Relationships: []
       }
+      music_tracks: {
+        Row: {
+          created_at: string
+          display_order: number
+          file_url: string
+          id: string
+          is_active: boolean
+          title: string
+          track_type: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          file_url: string
+          id?: string
+          is_active?: boolean
+          title: string
+          track_type?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          file_url?: string
+          id?: string
+          is_active?: boolean
+          title?: string
+          track_type?: string
+        }
+        Relationships: []
+      }
       portfolio_items: {
         Row: {
           category: string | null

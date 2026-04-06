@@ -1,11 +1,14 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import LoadingScreen from "@/components/LoadingScreen";
+import CustomCursor from "@/components/CustomCursor";
+import { AnimatePresence } from "framer-motion";
 
 // Lazy loaded pages
 const Index = lazy(() => import("@/pages/Index"));
@@ -34,6 +37,7 @@ const AdminUsers = lazy(() => import("@/pages/admin/UsersManager"));
 const AdminHero = lazy(() => import("@/pages/admin/HeroManager"));
 const AdminCategories = lazy(() => import("@/pages/admin/CategoriesManager"));
 const AdminMedia = lazy(() => import("@/pages/admin/MediaManager"));
+const AdminMusic = lazy(() => import("@/pages/admin/MusicManager"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,49 +48,71 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/booking" element={<Booking />} />
-              <Route path="/auth" element={<Auth />} />
+const AppRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Suspense fallback={<LoadingSpinner />} key={location.pathname}>
+        <Routes location={location}>
+          <Route path="/" element={<Index />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/auth" element={<Auth />} />
 
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="team" element={<AdminTeam />} />
-                <Route path="gallery" element={<AdminGallery />} />
-                <Route path="services" element={<AdminServices />} />
-                <Route path="portfolio" element={<AdminPortfolio />} />
-                <Route path="blog" element={<AdminBlog />} />
-                <Route path="bookings" element={<AdminBookings />} />
-                <Route path="messages" element={<AdminMessages />} />
-                <Route path="settings" element={<AdminSettings />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="hero" element={<AdminHero />} />
-                <Route path="categories" element={<AdminCategories />} />
-                <Route path="media" element={<AdminMedia />} />
-              </Route>
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="team" element={<AdminTeam />} />
+            <Route path="gallery" element={<AdminGallery />} />
+            <Route path="services" element={<AdminServices />} />
+            <Route path="portfolio" element={<AdminPortfolio />} />
+            <Route path="blog" element={<AdminBlog />} />
+            <Route path="bookings" element={<AdminBookings />} />
+            <Route path="messages" element={<AdminMessages />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="hero" element={<AdminHero />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="media" element={<AdminMedia />} />
+            <Route path="music" element={<AdminMusic />} />
+          </Route>
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+    </AnimatePresence>
+  );
+};
+
+const App = () => {
+  const [hasEntered, setHasEntered] = useState(() => {
+    return sessionStorage.getItem("davinci-entered") === "true";
+  });
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <CustomCursor />
+          {!hasEntered && (
+            <LoadingScreen onComplete={() => setHasEntered(true)} />
+          )}
+          {hasEntered && (
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          )}
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
