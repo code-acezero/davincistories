@@ -42,7 +42,7 @@ const Booking = () => {
       return;
     }
     setSubmitting(true);
-    const { error } = await supabase.from("bookings").insert(result.data);
+    const { error } = await supabase.from("bookings").insert(result.data as any);
     setSubmitting(false);
     if (error) {
       toast({ title: "Error", description: "Failed to submit booking.", variant: "destructive" });
