@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { label: "Blog", icon: FileText, path: "/admin/blog" },
   { label: "Bookings", icon: CalendarDays, path: "/admin/bookings" },
   { label: "Messages", icon: MessageSquare, path: "/admin/messages" },
+  { label: "Music", icon: Music, path: "/admin/music" },
   { label: "Users", icon: Users, path: "/admin/users" },
   { label: "Media", icon: FolderOpen, path: "/admin/media" },
   { label: "Settings", icon: Settings, path: "/admin/settings" },
