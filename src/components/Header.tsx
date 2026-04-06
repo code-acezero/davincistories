@@ -1,24 +1,28 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User, LogOut, Shield } from "lucide-react";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/#about" },
+  { label: "About", href: "/about" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Team", href: "/#team" },
-  { label: "Services", href: "/#services" },
-  { label: "Portfolio", href: "/#portfolio" },
-  { label: "Contact us", href: "/#contact" },
+  { label: "Services", href: "/services" },
+  { label: "Blog", href: "/blog" },
+  { label: "Booking", href: "/booking" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, isAdmin, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -26,96 +30,132 @@ const Header = () => {
     setIsMenuOpen(false);
   }, [location]);
 
-  const handleNavClick = (href: string) => {
-    setIsMenuOpen(false);
-    if (href.startsWith("/#")) {
-      const id = href.slice(2);
-      if (location.pathname === "/") {
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 w-full z-[4] transition-all duration-500 ${
-          isScrolled ? "bg-eerie-black py-3 shadow-lg" : "py-[18px]"
-        }`}
-      >
-        <div className="container flex items-center justify-between">
-          <Link to="/" className="block">
-            <img src="/images/logo.png" width={40} height={40} alt="DaVinci home" />
-          </Link>
+      <header className={`fixed top-0 left-0 w-full z-[40] transition-all duration-500 ${isScrolled ? "py-2" : "py-4"}`}>
+        <div className="container">
+          <nav className={`flex items-center justify-between rounded-2xl px-5 py-3 transition-all duration-500 ${isScrolled ? "glass-card-strong shadow-lg" : "glass-card"}`}>
+            <Link to="/" className="flex items-center gap-3 group">
+              <img src="/images/logo.png" width={36} height={36} alt="DaVinci" className="group-hover:scale-110 transition-transform" />
+              <span className="font-recoleta text-lg hidden sm:block">DaVinci</span>
+            </Link>
 
-          <button
-            className="block"
-            aria-label="open menu"
-            onClick={() => setIsMenuOpen(true)}
-          >
-            <img src="/images/menu.svg" width={17} height={17} alt="menu" />
-          </button>
+            {/* Desktop nav */}
+            <div className="hidden lg:flex items-center gap-1">
+              {navLinks.map((link) => {
+                const active = location.pathname === link.href;
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 overflow-hidden group ${
+                      active ? "text-primary" : "text-foreground/70 hover:text-foreground"
+                    }`}
+                  >
+                    {/* Glass nav slide effect */}
+                    <span className="relative z-10">{link.label}</span>
+                    {active && (
+                      <motion.div
+                        layoutId="nav-active"
+                        className="absolute inset-0 bg-primary/10 rounded-xl"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      />
+                    )}
+                    {/* Hover glow dot */}
+                    <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary transition-opacity ${active ? "opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Auth + Menu */}
+            <div className="flex items-center gap-3">
+              {user ? (
+                <div className="hidden lg:flex items-center gap-2">
+                  {isAdmin && (
+                    <Link to="/admin" className="text-xs bg-primary/10 text-primary rounded-lg px-3 py-1.5 flex items-center gap-1 hover:bg-primary/20 transition-colors">
+                      <Shield size={12} /> Admin
+                    </Link>
+                  )}
+                  <button onClick={signOut} className="text-muted-foreground hover:text-foreground transition-colors p-2">
+                    <LogOut size={16} />
+                  </button>
+                </div>
+              ) : (
+                <Link to="/auth" className="hidden lg:flex items-center gap-2 text-sm text-foreground/70 hover:text-primary transition-colors">
+                  <User size={16} /> Sign In
+                </Link>
+              )}
+              <button className="lg:hidden p-2" aria-label="menu" onClick={() => setIsMenuOpen(true)}>
+                <Menu size={20} />
+              </button>
+            </div>
+          </nav>
         </div>
       </header>
 
-      {/* Mobile Nav */}
-      <nav
-        className={`fixed top-0 right-0 h-screen max-w-[280px] w-full bg-eerie-black p-6 z-[5] overflow-y-auto transition-all duration-500 ${
-          isMenuOpen ? "translate-x-0 visible" : "translate-x-full invisible"
-        }`}
-      >
-        <div className="flex items-center justify-between mb-10">
-          <Link to="/">
-            <img src="/images/nav-logo.png" width={130} height={40} alt="DaVinci" />
-          </Link>
-          <button onClick={() => setIsMenuOpen(false)} aria-label="close menu" className="w-6 h-6 flex flex-col justify-center items-center gap-0">
-            <span className="block w-6 h-[3px] bg-foreground/80 rounded rotate-45 translate-y-[1.5px] transition-colors hover:bg-primary" />
-            <span className="block w-6 h-[3px] bg-foreground/80 rounded -rotate-45 -translate-y-[1.5px] transition-colors hover:bg-primary" />
-          </button>
-        </div>
-
-        <ul className="text-center space-y-1 pb-10">
-          {navLinks.map((link) => (
-            <li key={link.label}>
-              {link.href.startsWith("/#") ? (
-                <Link
-                  to={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="block text-xl font-normal py-[2px] capitalize transition-colors hover:text-primary"
-                >
-                  {link.label}
+      {/* Mobile nav overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/80 z-[45]" onClick={() => setIsMenuOpen(false)} />
+            <motion.nav
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 h-screen w-[280px] glass-card-strong z-[50] p-6 overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <Link to="/" className="flex items-center gap-2">
+                  <img src="/images/logo.png" width={32} height={32} alt="DaVinci" />
+                  <span className="font-recoleta">DaVinci</span>
                 </Link>
-              ) : (
-                <Link
-                  to={link.href}
-                  className="block text-xl font-normal py-[2px] capitalize transition-colors hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
+                <button onClick={() => setIsMenuOpen(false)} className="p-1"><X size={20} /></button>
+              </div>
 
-        <p className="text-lg font-medium mb-4">My Address</p>
-        <address className="text-foreground/75 font-light leading-relaxed mb-4">
-          Khoksa, Kushtia, Khulna, Bangladesh
-        </address>
-        <p className="text-foreground/75 font-light leading-relaxed mb-4">
-          Urgent issue? call us at{" "}
-          <a href="tel:+8801603327099" className="text-primary hover:underline text-[1.375rem]">
-            +8801603327099
-          </a>
-        </p>
-      </nav>
+              <ul className="space-y-1 mb-8">
+                {navLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.href}
+                      className={`block px-4 py-3 rounded-xl text-lg transition-all ${
+                        location.pathname === link.href ? "bg-primary/10 text-primary" : "text-foreground/70 hover:text-foreground hover:bg-muted/30"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
 
-      {/* Overlay */}
-      <div
-        className={`fixed inset-0 bg-background z-[2] transition-opacity duration-300 ${
-          isMenuOpen ? "opacity-75 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setIsMenuOpen(false)}
-      />
+              <div className="border-t border-border pt-6 space-y-3">
+                {user ? (
+                  <>
+                    {isAdmin && (
+                      <Link to="/admin" className="flex items-center gap-2 text-sm text-primary px-4 py-2">
+                        <Shield size={16} /> Admin Panel
+                      </Link>
+                    )}
+                    <button onClick={signOut} className="flex items-center gap-2 text-sm text-muted-foreground px-4 py-2 hover:text-foreground">
+                      <LogOut size={16} /> Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <Link to="/auth" className="flex items-center gap-2 text-sm text-foreground/70 px-4 py-2 hover:text-primary">
+                    <User size={16} /> Sign In
+                  </Link>
+                )}
+              </div>
+
+              <div className="mt-8 px-4">
+                <p className="text-xs text-muted-foreground">Khoksa, Kushtia, Bangladesh</p>
+                <a href="tel:+8801603327099" className="text-primary text-sm hover:underline">+8801603327099</a>
+              </div>
+            </motion.nav>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

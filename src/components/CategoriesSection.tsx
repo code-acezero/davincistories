@@ -1,65 +1,34 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-
-const categories = [
-  { title: "Nature", image: "/images/category-1.jpg" },
-  { title: "Model", image: "/gallery/f4.jpg" },
-  { title: "Street", image: "/images/category-3.jpg" },
-  { title: "Product", image: "/images/category-4.jpg" },
-  { title: "Fashion", image: "/gallery/f3.jpg" },
-  { title: "Film", image: "/images/category-5.jpg" },
-  { title: "Architecture", image: "/images/category-6.jpg" },
-  { title: "Event", image: "/gallery/e2.jpg" },
-  { title: "Wedding", image: "/gallery/w3.jpg" },
-  { title: "People", image: "/gallery/p4.jpg" },
-  { title: "Food", image: "/images/category-10.jpg" },
-  { title: "Couple", image: "/gallery/w1.jpg" },
-];
-
-const CategoryCard = ({ title, image }: { title: string; image: string }) => {
-  const ref = useScrollReveal<HTMLLIElement>();
-
-  return (
-    <li ref={ref}>
-      <a href="#" className="group block">
-        <h3 className="font-recoleta text-2xl font-light mb-2 group-hover:text-primary transition-colors">
-          {title}
-        </h3>
-        <figure
-          className="img-holder rounded-sm overflow-hidden"
-          style={{ "--width": 600, "--height": 690 } as React.CSSProperties}
-        >
-          <img
-            src={image}
-            width={600}
-            height={690}
-            loading="lazy"
-            alt={title}
-            className="img-cover transition-transform duration-500 group-hover:scale-110"
-          />
-        </figure>
-      </a>
-    </li>
-  );
-};
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const CategoriesSection = () => {
-  const titleRef = useScrollReveal<HTMLParagraphElement>();
-
+  useScrollReveal();
+  const { data: categories } = useQuery({
+    queryKey: ["category-items"],
+    queryFn: async () => { const { data } = await supabase.from("category_items").select("*").eq("is_visible", true).order("display_order"); return data ?? []; },
+  });
+  if (!categories || categories.length === 0) return null;
   return (
-    <section className="py-16 md:py-24">
-      <div className="container">
-        <p ref={titleRef} className="text-foreground/25 text-xl uppercase tracking-[3.5px] mb-10">
-          Categories
-        </p>
-
-        <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-          {categories.map((cat) => (
-            <CategoryCard key={cat.title} {...cat} />
+    <section className="py-20 md:py-28">
+      <div className="container px-4">
+        <div className="text-center mb-12 reveal-up">
+          <span className="text-primary text-sm uppercase tracking-[4px] font-medium mb-3 block">What We Do</span>
+          <h2 className="font-recoleta text-3xl md:text-4xl">Our <span className="text-gradient-warm">Categories</span></h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+          {categories.map((cat, i) => (
+            <div key={cat.id} className="reveal-up group" style={{ transitionDelay: `${i * 0.1}s` }}>
+              <div className="glass-card rounded-2xl overflow-hidden relative aspect-square">
+                {cat.image_url && <img src={cat.image_url} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4"><p className="font-recoleta text-lg">{cat.title}</p></div>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );
 };
-
 export default CategoriesSection;

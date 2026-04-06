@@ -1,75 +1,39 @@
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-
-const portfolioItems = [
-  { title: "With Nature", tag: "Outdoor", image: "/gallery/l8.jpg", width: 700, height: 605 },
-  { title: "Wedding Shot", tag: "Wedding", image: "/gallery/w1.jpg", width: 700, height: 1091 },
-  { title: "Fashion Model", tag: "Fashion, Model", image: "/gallery/f1.jpg", width: 700, height: 1000 },
-  { title: "Father & Son", tag: "Event", image: "/gallery/e1.jpg", width: 700, height: 850 },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 
 const PortfolioSection = () => {
-  const titleRef = useScrollReveal<HTMLHeadingElement>();
-
+  useScrollReveal();
+  const { data: items } = useQuery({
+    queryKey: ["portfolio-home"],
+    queryFn: async () => { const { data } = await supabase.from("portfolio_items").select("*").eq("is_visible", true).order("display_order").limit(6); return data ?? []; },
+  });
+  if (!items || items.length === 0) return null;
   return (
-    <section id="portfolio" className="py-16 md:py-24">
-      <div className="container">
-        <div className="grid md:grid-cols-2 gap-8">
-          <div>
-            <h2 ref={titleRef} className="font-recoleta text-4xl md:text-5xl font-light mb-8">
-              Our Recent Work.
-            </h2>
-
-            {portfolioItems.slice(0, 2).map((item) => (
-              <PortfolioCard key={item.title} {...item} />
-            ))}
-          </div>
-
-          <div className="md:pt-20">
-            {portfolioItems.slice(2).map((item) => (
-              <PortfolioCard key={item.title} {...item} />
-            ))}
-          </div>
+    <section id="portfolio" className="py-20 md:py-28">
+      <div className="container px-4">
+        <div className="text-center mb-12 reveal-up">
+          <span className="text-primary text-sm uppercase tracking-[4px] font-medium mb-3 block">Our Work</span>
+          <h2 className="font-recoleta text-3xl md:text-4xl">Featured <span className="text-gradient-warm">Portfolio</span></h2>
         </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {items.map((item, i) => (
+            <div key={item.id} className="reveal-up" style={{ transitionDelay: `${i * 0.1}s` }}>
+              <div className="glass-card rounded-2xl overflow-hidden group hover:border-primary/30 transition-all duration-500">
+                <div className="aspect-[4/3] overflow-hidden relative">
+                  <img src={item.image_url || "/placeholder.svg"} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+                    <div><h3 className="font-recoleta text-lg">{item.title}</h3>{item.category && <span className="text-xs text-primary/80">{item.category}</span>}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-10 reveal-up"><Link to="/gallery" className="inline-block border border-primary/50 text-primary rounded-xl px-8 py-3 text-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 btn-glow">View Full Gallery</Link></div>
       </div>
     </section>
   );
 };
-
-const PortfolioCard = ({ title, tag, image, width, height }: typeof portfolioItems[0]) => {
-  const ref = useScrollReveal<HTMLDivElement>();
-
-  return (
-    <div ref={ref} className="relative group mb-8">
-      <figure
-        className="img-holder rounded-sm overflow-hidden relative"
-        style={{ "--width": width, "--height": height } as React.CSSProperties}
-      >
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background to-transparent z-[1]" />
-        <img
-          src={image}
-          width={width}
-          height={height}
-          loading="lazy"
-          alt={title}
-          className="img-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </figure>
-
-      <div className="absolute bottom-0 left-0 p-6 z-[1]">
-        <h3 className="font-recoleta text-2xl font-normal">
-          <a href="#" className="hover:underline">{title}</a>
-        </h3>
-        <p className="text-foreground/70 text-sm">{tag}</p>
-      </div>
-
-      <a href="#" className="absolute top-0 right-0 w-[50px] h-[50px] bg-foreground rounded-bl-[25px] grid place-content-center z-[1]">
-        <svg xmlns="http://www.w3.org/2000/svg" width="43" height="20" viewBox="0 0 43 20" fill="none" className="-rotate-45">
-          <path d="M0 10H41" stroke="hsl(0 0% 0%)" strokeWidth="2" />
-          <path d="M33 1L41.9 10.2727L33 19" stroke="hsl(0 0% 0%)" strokeWidth="2" />
-        </svg>
-      </a>
-    </div>
-  );
-};
-
 export default PortfolioSection;
