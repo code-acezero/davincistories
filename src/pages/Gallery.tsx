@@ -1,5 +1,7 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
@@ -32,7 +34,14 @@ const Gallery = () => {
   };
 
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>Gallery — DaVinci Stories</title>
+        <meta name="description" content="Browse the DaVinci Stories gallery — a curated collection of our best photography and videography work across weddings, portraits, events, and more." />
+        <link rel="canonical" href="https://davincistories.lovable.app/gallery" />
+        <meta property="og:title" content="Gallery — DaVinci Stories" />
+        <meta property="og:url" content="https://davincistories.lovable.app/gallery" />
+      </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <section className="container px-4">
@@ -51,7 +60,7 @@ const Gallery = () => {
               {images?.map((img, i) => (
                 <motion.div key={img.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ delay: i * 0.03 }} className="mb-4 break-inside-avoid cursor-pointer group" onClick={() => setLightbox({ url: img.image_url, index: i })}>
                   <div className="rounded-xl overflow-hidden glass-card">
-                    <img src={img.image_url} alt={img.title || ""} className="w-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                    <img src={img.image_url} alt={img.title || "Gallery image"} className="w-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                   </div>
                 </motion.div>
               ))}
@@ -66,12 +75,12 @@ const Gallery = () => {
             <button className="absolute top-4 right-4 text-foreground/60 hover:text-foreground z-10" onClick={() => setLightbox(null)}><X size={24} /></button>
             <button className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground z-10" onClick={e => { e.stopPropagation(); navigateLightbox(-1); }}><ChevronLeft size={32} /></button>
             <button className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground z-10" onClick={e => { e.stopPropagation(); navigateLightbox(1); }}><ChevronRight size={32} /></button>
-            <motion.img key={lightbox.url} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} src={lightbox.url} alt="" className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg" onClick={e => e.stopPropagation()} />
+            <motion.img key={lightbox.url} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} src={lightbox.url} alt="Gallery preview" className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg" onClick={e => e.stopPropagation()} />
           </motion.div>
         )}
       </AnimatePresence>
       <Footer />
-    </>
+    </PageTransition>
   );
 };
 

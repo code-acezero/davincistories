@@ -1,5 +1,7 @@
-import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import PageTransition from "@/components/PageTransition";
 
 const NotFound = () => {
   const location = useLocation();
@@ -9,15 +11,22 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
+    <PageTransition>
+      <Helmet>
+        <title>404 — Page Not Found | DaVinci Stories</title>
+        <meta name="description" content="The page you're looking for doesn't exist. Return to the DaVinci Stories homepage." />
+      </Helmet>
+      <div className="flex min-h-screen items-center justify-center relative overflow-hidden">
+        <div className="orb w-[300px] h-[300px] bg-primary/20 top-[20%] left-[30%]" />
+        <div className="text-center relative z-10">
+          <h1 className="font-recoleta text-8xl text-primary mb-4">404</h1>
+          <p className="text-xl text-muted-foreground mb-8">Oops! This page doesn't exist</p>
+          <Link to="/" className="bg-primary text-primary-foreground rounded-xl px-8 py-3 font-medium btn-glow inline-block hover:scale-105 transition-transform">
+            Return Home
+          </Link>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

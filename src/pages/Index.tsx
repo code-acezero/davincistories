@@ -1,7 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import MusicPlayer from "@/components/MusicPlayer";
+import PageTransition from "@/components/PageTransition";
 import { lazy, Suspense } from "react";
 import useScrollReveal from "@/hooks/useScrollReveal";
 
@@ -18,18 +20,37 @@ const Index = () => {
   const [showTop, setShowTop] = useState(false);
   useScrollReveal();
 
-  // Scroll listener for back-to-top
-  if (typeof window !== "undefined") {
-    window.addEventListener("scroll", () => {
+  useEffect(() => {
+    const handleScroll = () => {
       const scrollEnd = document.body.scrollHeight - window.innerHeight;
-      const p = Math.round((window.scrollY / scrollEnd) * 100);
+      const p = scrollEnd > 0 ? Math.round((window.scrollY / scrollEnd) * 100) : 0;
       setPercent(p);
       setShowTop(p > 5);
-    }, { passive: true });
-  }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>DaVinci Stories — Creative Photography & Videography</title>
+        <meta name="description" content="DaVinci Stories is a creative photography and videography studio in Bangladesh. We turn your imagination into reality through stunning visuals and cinematic storytelling." />
+        <link rel="canonical" href="https://davincistories.lovable.app/" />
+        <meta property="og:title" content="DaVinci Stories — Creative Photography & Videography" />
+        <meta property="og:description" content="Turn your imagination into reality with DaVinci Stories. Professional photography, videography, and creative storytelling." />
+        <meta property="og:url" content="https://davincistories.lovable.app/" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "DaVinci Stories",
+          "description": "Creative photography and videography studio",
+          "address": { "@type": "PostalAddress", "addressLocality": "Khoksa, Kushtia", "addressRegion": "Khulna", "addressCountry": "BD" },
+          "telephone": "+8801603327099",
+          "email": "davincistories@gmail.com",
+          "url": "https://davincistories.lovable.app"
+        })}</script>
+      </Helmet>
       <Header />
       <main>
         <HeroSection />
@@ -54,7 +75,7 @@ const Index = () => {
           {percent}%
         </button>
       )}
-    </>
+    </PageTransition>
   );
 };
 
