@@ -1,5 +1,7 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,11 +33,7 @@ const Booking = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload = {
-      ...form,
-      service_id: form.service_id || null,
-      preferred_date: form.preferred_date || null,
-    };
+    const payload = { ...form, service_id: form.service_id || null, preferred_date: form.preferred_date || null };
     const result = bookingSchema.safeParse(payload);
     if (!result.success) {
       toast({ title: "Validation error", description: Object.values(result.error.flatten().fieldErrors).flat().join(", "), variant: "destructive" });
@@ -53,7 +51,14 @@ const Booking = () => {
   };
 
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>Book a Session — DaVinci Stories</title>
+        <meta name="description" content="Book a professional photography or videography session with DaVinci Stories. Choose your service, pick a date, and let's create magic together." />
+        <link rel="canonical" href="https://davincistories.lovable.app/booking" />
+        <meta property="og:title" content="Book a Session — DaVinci Stories" />
+        <meta property="og:url" content="https://davincistories.lovable.app/booking" />
+      </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <section className="container max-w-2xl mx-auto px-4">
@@ -63,7 +68,6 @@ const Booking = () => {
           <p className="text-center text-muted-foreground mb-12">
             Ready to create something magical? Book your session now.
           </p>
-
           <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 space-y-5">
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
@@ -103,7 +107,7 @@ const Booking = () => {
         </section>
       </main>
       <Footer />
-    </>
+    </PageTransition>
   );
 };
 

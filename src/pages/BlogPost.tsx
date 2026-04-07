@@ -1,5 +1,7 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useParams, Link } from "react-router-dom";
@@ -20,7 +22,15 @@ const BlogPost = () => {
   });
 
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>{post?.title ? `${post.title} — DaVinci Stories` : "Blog — DaVinci Stories"}</title>
+        <meta name="description" content={post?.excerpt || "Read this story from DaVinci Stories."} />
+        {post?.slug && <link rel="canonical" href={`https://davincistories.lovable.app/blog/${post.slug}`} />}
+        <meta property="og:title" content={post?.title || "Blog — DaVinci Stories"} />
+        {post?.cover_image && <meta property="og:image" content={post.cover_image} />}
+        <meta property="og:type" content="article" />
+      </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <article className="container max-w-3xl mx-auto px-4">
@@ -52,7 +62,7 @@ const BlogPost = () => {
         </article>
       </main>
       <Footer />
-    </>
+    </PageTransition>
   );
 };
 

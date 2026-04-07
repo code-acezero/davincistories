@@ -1,10 +1,10 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { motion } from "framer-motion";
 
 const About = () => {
   const { data: settings } = useQuery({
@@ -17,17 +17,26 @@ const About = () => {
     },
   });
 
+  const title = settings?.about_title || "About DaVinci Stories";
+
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>{title} — DaVinci Stories</title>
+        <meta name="description" content="Learn about DaVinci Stories — a creative photography and videography team from Bangladesh dedicated to turning your imagination into reality." />
+        <link rel="canonical" href="https://davincistories.lovable.app/about" />
+        <meta property="og:title" content={`${title} — DaVinci Stories`} />
+        <meta property="og:url" content="https://davincistories.lovable.app/about" />
+      </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <section className="container max-w-4xl mx-auto px-4">
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-recoleta text-4xl md:text-5xl text-center mb-8">
-            {settings?.about_title || "About DaVinci Stories"}
+            {title}
           </motion.h1>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="glass-card rounded-2xl p-8 md:p-12">
             {settings?.about_image && (
-              <img src={settings.about_image} alt="About" className="w-full rounded-xl mb-8 img-cover max-h-[400px]" />
+              <img src={settings.about_image} alt="About DaVinci Stories" className="w-full rounded-xl mb-8 img-cover max-h-[400px]" />
             )}
             <p className="text-foreground/80 text-lg leading-relaxed whitespace-pre-wrap">
               {settings?.about_description || "DaVinci Stories is a creative photography and videography team dedicated to turning your imagination into reality. We specialize in capturing moments that tell compelling stories through our lens."}
@@ -41,7 +50,7 @@ const About = () => {
         </section>
       </main>
       <Footer />
-    </>
+    </PageTransition>
   );
 };
 

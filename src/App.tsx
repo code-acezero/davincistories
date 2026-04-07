@@ -1,10 +1,11 @@
-import { Suspense, lazy, useState, useEffect } from "react";
+import { Suspense, lazy, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { HelmetProvider } from "react-helmet-async";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import LoadingScreen from "@/components/LoadingScreen";
 import CustomCursor from "@/components/CustomCursor";
@@ -95,23 +96,25 @@ const App = () => {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <CustomCursor />
-          {!hasEntered && (
-            <LoadingScreen onComplete={() => setHasEntered(true)} />
-          )}
-          {hasEntered && (
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          )}
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <CustomCursor />
+            {!hasEntered && (
+              <LoadingScreen onComplete={() => setHasEntered(true)} />
+            )}
+            {hasEntered && (
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            )}
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 

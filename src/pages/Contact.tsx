@@ -1,5 +1,7 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
@@ -37,7 +39,14 @@ const Contact = () => {
   };
 
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>Contact Us — DaVinci Stories</title>
+        <meta name="description" content="Get in touch with DaVinci Stories. Contact us for photography and videography inquiries, collaborations, or project discussions." />
+        <link rel="canonical" href="https://davincistories.lovable.app/contact" />
+        <meta property="og:title" content="Contact Us — DaVinci Stories" />
+        <meta property="og:url" content="https://davincistories.lovable.app/contact" />
+      </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <section className="container px-4">
@@ -47,7 +56,6 @@ const Contact = () => {
           <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
             Have a project in mind? Let's bring your vision to life.
           </p>
-
           <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
               <div className="glass-card rounded-2xl p-8">
@@ -68,7 +76,6 @@ const Contact = () => {
                 </div>
               </div>
             </motion.div>
-
             <motion.form initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 space-y-5">
               <div>
                 <label className="text-sm text-foreground/70 mb-1 block">Name</label>
@@ -94,7 +101,7 @@ const Contact = () => {
         </section>
       </main>
       <Footer />
-    </>
+    </PageTransition>
   );
 };
 

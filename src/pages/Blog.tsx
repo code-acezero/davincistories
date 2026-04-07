@@ -1,5 +1,7 @@
+import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
@@ -16,7 +18,14 @@ const Blog = () => {
   });
 
   return (
-    <>
+    <PageTransition>
+      <Helmet>
+        <title>Blog & Stories — DaVinci Stories</title>
+        <meta name="description" content="Read behind-the-lens stories, photography tips, and creative insights from the DaVinci Stories team." />
+        <link rel="canonical" href="https://davincistories.lovable.app/blog" />
+        <meta property="og:title" content="Blog & Stories — DaVinci Stories" />
+        <meta property="og:url" content="https://davincistories.lovable.app/blog" />
+      </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <section className="container px-4">
@@ -52,7 +61,7 @@ const Blog = () => {
         </section>
       </main>
       <Footer />
-    </>
+    </PageTransition>
   );
 };
 
