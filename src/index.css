@@ -373,3 +373,54 @@
 .parallax-section {
   will-change: transform;
 }
+
+/* Mobile performance: reduce animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile: disable expensive effects */
+@media (max-width: 768px) {
+  .custom-cursor-main,
+  .custom-cursor-trail,
+  .click-ripple {
+    display: none !important;
+  }
+  
+  .orb {
+    filter: blur(40px);
+    opacity: 0.5;
+  }
+  
+  .glass-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .glass-card-strong {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+}
+
+/* GPU hints for animated elements */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Smooth scroll for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better touch targets */
+@media (pointer: coarse) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
