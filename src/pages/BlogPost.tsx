@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock, Share2 } from "lucide-react";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -21,20 +21,41 @@ const BlogPost = () => {
     enabled: !!slug,
   });
 
+  const ogImage = post?.cover_image || "https://davincistories.lovable.app/images/og-cover.jpg";
+
   return (
     <PageTransition>
       <Helmet>
         <title>{post?.title ? `${post.title} — DaVinci Stories` : "Blog — DaVinci Stories"}</title>
         <meta name="description" content={post?.excerpt || "Read this story from DaVinci Stories."} />
         {post?.slug && <link rel="canonical" href={`https://davincistories.lovable.app/blog/${post.slug}`} />}
-        <meta property="og:title" content={post?.title || "Blog — DaVinci Stories"} />
-        {post?.cover_image && <meta property="og:image" content={post.cover_image} />}
         <meta property="og:type" content="article" />
+        <meta property="og:title" content={post?.title || "Blog — DaVinci Stories"} />
+        <meta property="og:description" content={post?.excerpt || "Read this story from DaVinci Stories."} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={`https://davincistories.lovable.app/blog/${slug}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post?.title || "Blog — DaVinci Stories"} />
+        <meta name="twitter:description" content={post?.excerpt || ""} />
+        <meta name="twitter:image" content={ogImage} />
+        {post && (
+          <script type="application/ld+json">{JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": post.title,
+            "image": post.cover_image,
+            "datePublished": post.published_at,
+            "dateModified": post.updated_at,
+            "author": { "@type": "Organization", "name": "DaVinci Stories" },
+            "publisher": { "@type": "Organization", "name": "DaVinci Stories" },
+            "description": post.excerpt,
+          })}</script>
+        )}
       </Helmet>
       <Header />
       <main className="pt-24 pb-20">
         <article className="container max-w-3xl mx-auto px-4">
-          <Link to="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8">
+          <Link to="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 text-sm">
             <ArrowLeft size={16} /> Back to Blog
           </Link>
           {isLoading ? (
@@ -46,13 +67,25 @@ const BlogPost = () => {
           ) : post ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               {post.cover_image && (
-                <img src={post.cover_image} alt={post.title} className="w-full rounded-2xl mb-8 max-h-[500px] object-cover" />
+                <div className="rounded-3xl overflow-hidden mb-8 glass-card">
+                  <img src={post.cover_image} alt={post.title} className="w-full max-h-[500px] object-cover" />
+                </div>
               )}
               <h1 className="font-recoleta text-3xl md:text-5xl mb-4">{post.title}</h1>
-              {post.published_at && (
-                <time className="text-muted-foreground text-sm">{format(new Date(post.published_at), "MMMM dd, yyyy")}</time>
-              )}
-              <div className="mt-8 prose prose-invert max-w-none text-foreground/80 leading-relaxed whitespace-pre-wrap">
+              <div className="flex items-center gap-4 text-muted-foreground text-sm mb-8 pb-8 border-b border-border">
+                {post.published_at && (
+                  <span className="flex items-center gap-1.5">
+                    <Clock size={14} /> {format(new Date(post.published_at), "MMMM dd, yyyy")}
+                  </span>
+                )}
+                <button
+                  onClick={() => navigator.share?.({ title: post.title, url: window.location.href })}
+                  className="flex items-center gap-1.5 hover:text-primary transition-colors ml-auto"
+                >
+                  <Share2 size={14} /> Share
+                </button>
+              </div>
+              <div className="prose prose-invert max-w-none text-foreground/80 leading-relaxed whitespace-pre-wrap text-[17px]">
                 {post.content}
               </div>
             </motion.div>
