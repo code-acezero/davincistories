@@ -1,18 +1,20 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 
 const fallbackWords = [
   "Cinematography", "Photography", "Event Coverage", "Landscape Shots",
   "Wedding Shoots", "Outdoor Shoots", "Product Shoots",
 ];
 
+const PARTICLE_COUNT = 30;
+
 const HeroSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { data: slides } = useQuery({
     queryKey: ["hero-slides"],
@@ -26,9 +28,7 @@ const HeroSection = () => {
   const videoUrl = slides?.[0]?.video_url || "/videos/intro.mp4";
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % words.length);
-    }, 3500);
+    const interval = setInterval(() => setActiveIndex(prev => (prev + 1) % words.length), 3500);
     return () => clearInterval(interval);
   }, [words.length]);
 
@@ -43,6 +43,84 @@ const HeroSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Particle canvas animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animId: number;
+    const particles: { x: number; y: number; vx: number; vy: number; size: number; alpha: number; pulse: number }[] = [];
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * (window.devicePixelRatio > 1 ? 2 : 1);
+      canvas.height = canvas.offsetHeight * (window.devicePixelRatio > 1 ? 2 : 1);
+      ctx.scale(window.devicePixelRatio > 1 ? 2 : 1, window.devicePixelRatio > 1 ? 2 : 1);
+    };
+    resize();
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * canvas.offsetWidth,
+        y: Math.random() * canvas.offsetHeight,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 2 + 0.5,
+        alpha: Math.random() * 0.4 + 0.1,
+        pulse: Math.random() * Math.PI * 2,
+      });
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.pulse += 0.02;
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        const a = p.alpha * (0.6 + 0.4 * Math.sin(p.pulse));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(216, 75, 102, ${a})`;
+        ctx.fill();
+      });
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(150, 188, 189, ${0.08 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    window.addEventListener("resize", resize);
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
   const scrollToContent = () => {
     const el = sectionRef.current?.nextElementSibling;
     el?.scrollIntoView({ behavior: "smooth" });
@@ -50,24 +128,21 @@ const HeroSection = () => {
 
   return (
     <section ref={sectionRef} id="home" className="relative h-screen flex items-center justify-center text-center overflow-hidden">
-      {/* Video background with parallax */}
+      {/* Video background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay muted loop playsInline
-          className="w-full h-full object-cover opacity-40 will-change-transform scale-110"
-        >
+        <video ref={videoRef} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-35 will-change-transform scale-110">
           <source src={videoUrl} type="video/mp4" />
         </video>
-        {/* Multi-layer gradient overlay */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(193 75% 7% / 0.5) 0%, hsl(193 79% 19% / 0.4) 40%, hsl(193 75% 7% / 0.95) 100%)" }} />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 40%, hsl(193 75% 7% / 0.6) 100%)" }} />
       </div>
 
+      {/* Particle canvas */}
+      <canvas ref={canvasRef} className="absolute inset-0 z-[1] w-full h-full pointer-events-none" />
+
       {/* Floating orbs */}
-      <div className="absolute w-[250px] h-[250px] rounded-full bg-primary/8 blur-[100px] top-[15%] right-[10%]" style={{ animation: "float 8s ease-in-out infinite" }} />
-      <div className="absolute w-[180px] h-[180px] rounded-full bg-copper/8 blur-[70px] bottom-[25%] left-[12%]" style={{ animation: "float 6s ease-in-out infinite", animationDelay: "-3s" }} />
-      <div className="absolute w-[120px] h-[120px] rounded-full bg-ocean-teal/10 blur-[50px] top-[60%] right-[30%]" style={{ animation: "float 10s ease-in-out infinite", animationDelay: "-5s" }} />
+      <div className="absolute w-[300px] h-[300px] rounded-full bg-primary/8 blur-[120px] top-[15%] right-[10%]" style={{ animation: "float 8s ease-in-out infinite" }} />
+      <div className="absolute w-[200px] h-[200px] rounded-full bg-copper/8 blur-[80px] bottom-[25%] left-[12%]" style={{ animation: "float 6s ease-in-out infinite", animationDelay: "-3s" }} />
 
       <div className="container relative z-[2] px-4">
         <motion.img
@@ -75,10 +150,9 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.2, duration: 0.8 }}
           src="/images/logo-banner.png"
-          width={322}
-          height={322}
+          width={322} height={322}
           alt="DaVinci Stories"
-          className="mx-auto max-w-[100px] md:max-w-[200px] mb-6 drop-shadow-2xl"
+          className="mx-auto max-w-[80px] md:max-w-[160px] mb-6 drop-shadow-2xl"
         />
 
         <motion.h1
@@ -90,7 +164,7 @@ const HeroSection = () => {
           DaVinci <span className="text-gradient-primary">Stories</span>
         </motion.h1>
 
-        {/* Rotating words */}
+        {/* Rotating words with typewriter effect */}
         <div className="relative h-[1.5em] my-4 md:my-6 overflow-hidden">
           {words.map((word, i) => (
             <motion.span
