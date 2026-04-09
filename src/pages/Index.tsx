@@ -13,7 +13,14 @@ const TeamSection = lazy(() => import("@/components/TeamSection"));
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
 const PortfolioSection = lazy(() => import("@/components/PortfolioSection"));
 const HomeSectionShowcase = lazy(() => import("@/components/HomeSectionShowcase"));
+const StatsCounter = lazy(() => import("@/components/StatsCounter"));
+const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
+const ProcessTimeline = lazy(() => import("@/components/ProcessTimeline"));
+const InteractivePricing = lazy(() => import("@/components/InteractivePricing"));
+const BeforeAfterShowcase = lazy(() => import("@/components/BeforeAfterShowcase"));
 const Footer = lazy(() => import("@/components/Footer"));
+
+const OG_IMAGE = "https://davincistories.lovable.app/images/og-cover.jpg";
 
 const Index = () => {
   const [percent, setPercent] = useState(0);
@@ -37,18 +44,33 @@ const Index = () => {
         <title>DaVinci Stories — Creative Photography & Videography</title>
         <meta name="description" content="DaVinci Stories is a creative photography and videography studio in Bangladesh. We turn your imagination into reality through stunning visuals and cinematic storytelling." />
         <link rel="canonical" href="https://davincistories.lovable.app/" />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
         <meta property="og:title" content="DaVinci Stories — Creative Photography & Videography" />
         <meta property="og:description" content="Turn your imagination into reality with DaVinci Stories. Professional photography, videography, and creative storytelling." />
         <meta property="og:url" content="https://davincistories.lovable.app/" />
+        <meta property="og:image" content={OG_IMAGE} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="DaVinci Stories" />
+        <meta property="og:locale" content="en_US" />
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="DaVinci Stories — Creative Photography & Videography" />
+        <meta name="twitter:description" content="Turn your imagination into reality with DaVinci Stories." />
+        <meta name="twitter:image" content={OG_IMAGE} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           "name": "DaVinci Stories",
           "description": "Creative photography and videography studio",
+          "image": OG_IMAGE,
           "address": { "@type": "PostalAddress", "addressLocality": "Khoksa, Kushtia", "addressRegion": "Khulna", "addressCountry": "BD" },
           "telephone": "+8801603327099",
           "email": "davincistories@gmail.com",
-          "url": "https://davincistories.lovable.app"
+          "url": "https://davincistories.lovable.app",
+          "priceRange": "৳৳",
+          "sameAs": []
         })}</script>
       </Helmet>
       <Header />
@@ -56,10 +78,15 @@ const Index = () => {
         <HeroSection />
         <Suspense fallback={null}>
           <AboutSection />
+          <StatsCounter />
           <CategoriesSection />
+          <BeforeAfterShowcase />
           <TeamSection />
           <ServicesSection />
+          <ProcessTimeline />
           <PortfolioSection />
+          <InteractivePricing />
+          <TestimonialsSection />
           <HomeSectionShowcase />
         </Suspense>
       </main>
