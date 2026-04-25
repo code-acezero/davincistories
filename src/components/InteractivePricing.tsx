@@ -184,12 +184,9 @@ const InteractivePricing = () => {
               ৳{total.toLocaleString()}
             </motion.div>
           </AnimatePresence>
-          <Link
-            to="/booking"
-            className="inline-block w-full bg-primary text-primary-foreground rounded-xl py-3 font-medium btn-glow hover:opacity-90 transition-all"
-          >
+          <LiquidButton to="/booking" variant="primary" size="lg" className="w-full">
             Book This Package
-          </Link>
+          </LiquidButton>
         </motion.div>
       </div>
     </section>
