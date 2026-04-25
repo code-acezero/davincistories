@@ -1,7 +1,8 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music } from "lucide-react";
+import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { safeRedirect } from "@/lib/safeRedirect";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/master" },
