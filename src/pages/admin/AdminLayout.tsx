@@ -6,6 +6,7 @@ import { safeRedirect } from "@/lib/safeRedirect";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/master" },
+  { label: "Setup & OAuth", icon: ShieldCheck, path: "/master/setup" },
   { label: "Hero Slides", icon: Layers, path: "/master/hero" },
   { label: "Team", icon: Users, path: "/master/team" },
   { label: "Gallery", icon: Image, path: "/master/gallery" },
@@ -16,7 +17,7 @@ const navItems = [
   { label: "Bookings", icon: CalendarDays, path: "/master/bookings" },
   { label: "Messages", icon: MessageSquare, path: "/master/messages" },
   { label: "Music", icon: Music, path: "/master/music" },
-  { label: "Users", icon: Users, path: "/master/users" },
+  { label: "Users & Roles", icon: Users, path: "/master/users" },
   { label: "Media", icon: FolderOpen, path: "/master/media" },
   { label: "Settings", icon: Settings, path: "/master/settings" },
 ];
