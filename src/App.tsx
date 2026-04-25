@@ -91,6 +91,7 @@ const AppRoutes = () => {
         </Routes>
       </Suspense>
     </AnimatePresence>
+    </>
   );
 };
 
