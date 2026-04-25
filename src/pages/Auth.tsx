@@ -17,7 +17,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/master";
+  const redirectTo = safeRedirect(searchParams.get("redirect"), "/master");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
