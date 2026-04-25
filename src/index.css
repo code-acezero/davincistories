@@ -92,11 +92,14 @@
     --gold: 36 45% 60%;
     --rose-red: 346 85% 55%;
 
-    /* Glass morphism */
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-blur: 20px;
-    --glass-highlight: rgba(150, 188, 189, 0.1);
+    /* Liquid Glass morphism */
+    --glass-bg: rgba(180, 220, 220, 0.05);
+    --glass-border: rgba(180, 220, 220, 0.12);
+    --glass-blur: 22px;
+    --glass-highlight: rgba(180, 230, 230, 0.18);
+    --glass-refraction: rgba(255, 255, 255, 0.06);
+    --liquid-tint: rgba(56, 142, 142, 0.08);
+    --ink-color: 346 75% 45%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(346 85% 55%), hsl(18 83% 35%));
