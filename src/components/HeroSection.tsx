@@ -156,14 +156,19 @@ const HeroSection = () => {
           className="mx-auto max-w-[80px] md:max-w-[160px] mb-6 drop-shadow-2xl"
         />
 
+        {/* Ink-writing headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-recoleta text-4xl md:text-7xl lg:text-8xl font-normal mb-2"
+          className="font-recoleta text-4xl md:text-7xl lg:text-8xl font-normal mb-2 tracking-tight"
         >
-          DaVinci <span className="text-gradient-primary">Stories</span>
+          <span className="ink-reveal">DaVinci </span>
+          <span className="ink-stroke text-gradient-primary">Stories</span>
         </motion.h1>
+
+        {/* Glass surface scratches/droplets */}
+        <div className="glass-surface" aria-hidden />
 
         {/* Rotating words with typewriter effect */}
         <div className="relative h-[1.5em] my-4 md:my-6 overflow-hidden">
@@ -178,7 +183,7 @@ const HeroSection = () => {
                 filter: i === activeIndex ? "blur(0px)" : "blur(4px)",
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="absolute left-1/2 -translate-x-1/2 font-recoleta text-[5vw] md:text-4xl lg:text-5xl font-light whitespace-nowrap"
+              className="absolute left-1/2 -translate-x-1/2 font-recoleta italic text-[5vw] md:text-4xl lg:text-5xl font-light whitespace-nowrap"
               style={{ color: "hsl(var(--ocean-teal))" }}
             >
               {word}
@@ -192,22 +197,22 @@ const HeroSection = () => {
           transition={{ delay: 0.8, duration: 1 }}
           className="text-xs md:text-sm font-light uppercase tracking-[5px] md:tracking-[8px] text-foreground/50 mt-2"
         >
-          Let's Make Your Imaginations Into Reality
+          A diary written in light & water
         </motion.p>
 
-        {/* CTA buttons */}
+        {/* Liquid CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2 }}
           className="mt-10 flex flex-wrap justify-center gap-4"
         >
-          <a href="/gallery" className="bg-primary text-primary-foreground rounded-full px-8 py-3 text-sm font-medium hover:opacity-90 transition-all btn-glow hover:-translate-y-0.5">
+          <LiquidButton to="/gallery" variant="primary" size="md">
             View Our Work
-          </a>
-          <a href="/booking" className="border border-foreground/20 text-foreground rounded-full px-8 py-3 text-sm hover:border-primary hover:text-primary transition-all hover:-translate-y-0.5">
+          </LiquidButton>
+          <LiquidButton to="/booking" variant="ghost" size="md">
             Book a Session
-          </a>
+          </LiquidButton>
         </motion.div>
       </div>
 
