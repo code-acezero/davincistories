@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, Minus, Sparkles, Camera, Video, Image, Palette } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Check, Plus, Sparkles, Camera, Video, Image, Palette } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import LiquidButton from "@/components/ui/LiquidButton";
 
 interface AddOn {
   id: string;
