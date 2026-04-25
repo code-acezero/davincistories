@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, Minus, Sparkles, Camera, Video, Image, Palette } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Check, Plus, Sparkles, Camera, Video, Image, Palette } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import LiquidButton from "@/components/ui/LiquidButton";
 
 interface AddOn {
   id: string;
@@ -88,13 +88,20 @@ const InteractivePricing = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 onClick={() => setSelectedPackage(pkg.id)}
-                className={`relative glass-card rounded-2xl p-6 cursor-pointer transition-all duration-500 ${
-                  isActive ? "border-primary/50 shadow-[0_0_40px_hsl(346_85%_55%/0.15)] scale-[1.02]" : "hover:border-foreground/10"
+                className={`relative glass-card rounded-2xl p-6 cursor-pointer transition-all duration-500 float-organic ${
+                  isActive
+                    ? "border-primary/50 shadow-[0_20px_60px_hsl(346_85%_55%/0.25)] scale-[1.03]"
+                    : "hover:border-foreground/10 hover:shadow-[0_20px_50px_hsl(193_75%_7%/0.5)]"
                 }`}
+                style={{ animationDelay: `${i * 1.5}s` }}
               >
+                <div className="glass-surface rounded-2xl" aria-hidden />
                 {pkg.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] px-4 py-1 rounded-full font-medium uppercase tracking-wider flex items-center gap-1">
-                    <Sparkles size={10} /> Most Popular
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="relative inline-flex items-center gap-1 bg-gradient-to-r from-primary to-copper text-primary-foreground text-[10px] px-4 py-1 rounded-full font-medium uppercase tracking-wider shadow-[0_0_24px_hsl(346_85%_55%/0.6)]">
+                      <Sparkles size={10} className="animate-pulse" /> Most Popular
+                      <span className="absolute inset-0 rounded-full bg-primary/30 blur-md -z-10 animate-pulse" />
+                    </span>
                   </div>
                 )}
                 <div className="text-center mb-6">
@@ -177,12 +184,9 @@ const InteractivePricing = () => {
               ৳{total.toLocaleString()}
             </motion.div>
           </AnimatePresence>
-          <Link
-            to="/booking"
-            className="inline-block w-full bg-primary text-primary-foreground rounded-xl py-3 font-medium btn-glow hover:opacity-90 transition-all"
-          >
+          <LiquidButton to="/booking" variant="primary" size="lg" className="w-full">
             Book This Package
-          </Link>
+          </LiquidButton>
         </motion.div>
       </div>
     </section>

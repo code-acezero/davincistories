@@ -51,8 +51,8 @@ const Header = () => {
                   <Link
                     key={link.label}
                     to={link.href}
-                    className={`relative px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all duration-300 group ${
-                      active ? "text-primary" : "text-foreground/60 hover:text-foreground"
+                    className={`ink-underline relative px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all duration-300 ${
+                      active ? "text-primary active" : "text-foreground/60 hover:text-foreground"
                     }`}
                   >
                     <span className="relative z-10">{link.label}</span>
@@ -63,8 +63,6 @@ const Header = () => {
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                       />
                     )}
-                    {/* Hover underline effect */}
-                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-primary rounded-full transition-all duration-300 group-hover:w-4" />
                   </Link>
                 );
               })}

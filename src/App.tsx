@@ -10,6 +10,7 @@ import { HelmetProvider } from "react-helmet-async";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import LoadingScreen from "@/components/LoadingScreen";
 import CustomCursor from "@/components/CustomCursor";
+import UnderwaterBackground from "@/components/UnderwaterBackground";
 import { AnimatePresence } from "framer-motion";
 
 // Lazy loaded pages
@@ -53,7 +54,9 @@ const queryClient = new QueryClient({
 const AppRoutes = () => {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <UnderwaterBackground />
+      <AnimatePresence mode="wait">
       <Suspense fallback={<LoadingSpinner />} key={location.pathname}>
         <Routes location={location}>
           <Route path="/" element={<Index />} />
@@ -88,6 +91,7 @@ const AppRoutes = () => {
         </Routes>
       </Suspense>
     </AnimatePresence>
+    </>
   );
 };
 

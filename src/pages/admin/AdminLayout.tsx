@@ -1,10 +1,12 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music } from "lucide-react";
+import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { safeRedirect } from "@/lib/safeRedirect";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/master" },
+  { label: "Setup & OAuth", icon: ShieldCheck, path: "/master/setup" },
   { label: "Hero Slides", icon: Layers, path: "/master/hero" },
   { label: "Team", icon: Users, path: "/master/team" },
   { label: "Gallery", icon: Image, path: "/master/gallery" },
@@ -15,7 +17,7 @@ const navItems = [
   { label: "Bookings", icon: CalendarDays, path: "/master/bookings" },
   { label: "Messages", icon: MessageSquare, path: "/master/messages" },
   { label: "Music", icon: Music, path: "/master/music" },
-  { label: "Users", icon: Users, path: "/master/users" },
+  { label: "Users & Roles", icon: Users, path: "/master/users" },
   { label: "Media", icon: FolderOpen, path: "/master/media" },
   { label: "Settings", icon: Settings, path: "/master/settings" },
 ];
@@ -26,7 +28,10 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" /></div>;
-  if (!user) return <Navigate to={`/auth?redirect=${encodeURIComponent(location.pathname)}`} replace />;
+  if (!user) {
+    const safe = safeRedirect(location.pathname, "/master");
+    return <Navigate to={`/auth?redirect=${encodeURIComponent(safe)}`} replace />;
+  }
   if (!isAdmin) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-center"><h1 className="font-recoleta text-2xl mb-2">Access Denied</h1><p className="text-muted-foreground">You need admin privileges.</p><Link to="/" className="text-primary hover:underline mt-4 inline-block">Go Home</Link></div></div>;
 
   return (

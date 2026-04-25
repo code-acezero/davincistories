@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
+import { safeRedirect, safeOAuthRedirectURL } from "@/lib/safeRedirect";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,7 +17,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/master";
+  const redirectTo = safeRedirect(searchParams.get("redirect"), "/master");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +47,7 @@ const Auth = () => {
   const handleGoogleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}${redirectTo}` },
+      options: { redirectTo: safeOAuthRedirectURL(redirectTo, "/master") },
     });
     if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
   };
