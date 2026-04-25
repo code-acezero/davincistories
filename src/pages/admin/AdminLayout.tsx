@@ -4,20 +4,20 @@ import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDay
 import { useState } from "react";
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
-  { label: "Hero Slides", icon: Layers, path: "/admin/hero" },
-  { label: "Team", icon: Users, path: "/admin/team" },
-  { label: "Gallery", icon: Image, path: "/admin/gallery" },
-  { label: "Categories", icon: Palette, path: "/admin/categories" },
-  { label: "Services", icon: Briefcase, path: "/admin/services" },
-  { label: "Portfolio", icon: Camera, path: "/admin/portfolio" },
-  { label: "Blog", icon: FileText, path: "/admin/blog" },
-  { label: "Bookings", icon: CalendarDays, path: "/admin/bookings" },
-  { label: "Messages", icon: MessageSquare, path: "/admin/messages" },
-  { label: "Music", icon: Music, path: "/admin/music" },
-  { label: "Users", icon: Users, path: "/admin/users" },
-  { label: "Media", icon: FolderOpen, path: "/admin/media" },
-  { label: "Settings", icon: Settings, path: "/admin/settings" },
+  { label: "Dashboard", icon: LayoutDashboard, path: "/master" },
+  { label: "Hero Slides", icon: Layers, path: "/master/hero" },
+  { label: "Team", icon: Users, path: "/master/team" },
+  { label: "Gallery", icon: Image, path: "/master/gallery" },
+  { label: "Categories", icon: Palette, path: "/master/categories" },
+  { label: "Services", icon: Briefcase, path: "/master/services" },
+  { label: "Portfolio", icon: Camera, path: "/master/portfolio" },
+  { label: "Blog", icon: FileText, path: "/master/blog" },
+  { label: "Bookings", icon: CalendarDays, path: "/master/bookings" },
+  { label: "Messages", icon: MessageSquare, path: "/master/messages" },
+  { label: "Music", icon: Music, path: "/master/music" },
+  { label: "Users", icon: Users, path: "/master/users" },
+  { label: "Media", icon: FolderOpen, path: "/master/media" },
+  { label: "Settings", icon: Settings, path: "/master/settings" },
 ];
 
 const AdminLayout = () => {
@@ -26,7 +26,7 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" /></div>;
-  if (!user) return <Navigate to="/auth" replace />;
+  if (!user) return <Navigate to={`/auth?redirect=${encodeURIComponent(location.pathname)}`} replace />;
   if (!isAdmin) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-center"><h1 className="font-recoleta text-2xl mb-2">Access Denied</h1><p className="text-muted-foreground">You need admin privileges.</p><Link to="/" className="text-primary hover:underline mt-4 inline-block">Go Home</Link></div></div>;
 
   return (
@@ -41,7 +41,7 @@ const AdminLayout = () => {
         <div className="p-6 border-b border-border">
           <Link to="/" className="flex items-center gap-3">
             <img src="/images/logo.png" alt="DaVinci" className="w-8 h-8" />
-            <span className="font-recoleta text-lg">Admin Panel</span>
+            <span className="font-recoleta text-lg">Master Panel</span>
           </Link>
         </div>
 

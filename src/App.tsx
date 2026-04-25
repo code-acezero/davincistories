@@ -1,4 +1,5 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -66,7 +67,7 @@ const AppRoutes = () => {
           <Route path="/auth" element={<Auth />} />
 
           {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/master" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="team" element={<AdminTeam />} />
             <Route path="gallery" element={<AdminGallery />} />
@@ -94,6 +95,20 @@ const App = () => {
   const [hasEntered, setHasEntered] = useState(() => {
     return sessionStorage.getItem("davinci-entered") === "true";
   });
+
+  // Bootstrap the first admin account once per session (idempotent on the server)
+  useEffect(() => {
+    if (sessionStorage.getItem("admin-bootstrapped")) return;
+    supabase.functions
+      .invoke("bootstrap-admin")
+      .then(({ data, error }) => {
+        if (!error) {
+          sessionStorage.setItem("admin-bootstrapped", "true");
+          if (data) sessionStorage.setItem("admin-bootstrap-result", JSON.stringify(data));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <HelmetProvider>
