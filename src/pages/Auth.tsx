@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import PageTransition from "@/components/PageTransition";
+import { safeRedirect, safeOAuthRedirectURL } from "@/lib/safeRedirect";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
