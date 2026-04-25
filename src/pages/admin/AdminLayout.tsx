@@ -28,7 +28,10 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" /></div>;
-  if (!user) return <Navigate to={`/auth?redirect=${encodeURIComponent(location.pathname)}`} replace />;
+  if (!user) {
+    const safe = safeRedirect(location.pathname, "/master");
+    return <Navigate to={`/auth?redirect=${encodeURIComponent(safe)}`} replace />;
+  }
   if (!isAdmin) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-center"><h1 className="font-recoleta text-2xl mb-2">Access Denied</h1><p className="text-muted-foreground">You need admin privileges.</p><Link to="/" className="text-primary hover:underline mt-4 inline-block">Go Home</Link></div></div>;
 
   return (
