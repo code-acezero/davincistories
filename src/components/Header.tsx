@@ -97,7 +97,7 @@ const Header = () => {
                           <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                         </div>
                         {isAdmin && (
-                          <Link to="/admin" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-primary/10 text-primary transition-colors">
+                          <Link to="/master" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm hover:bg-primary/10 text-primary transition-colors">
                             <Shield size={14} /> Admin Panel
                           </Link>
                         )}
@@ -174,7 +174,7 @@ const Header = () => {
                       <p className="text-sm text-muted-foreground truncate flex-1">{user.email}</p>
                     </div>
                     {isAdmin && (
-                      <Link to="/admin" className="flex items-center gap-2 text-sm text-primary px-4 py-2 rounded-lg hover:bg-primary/10 transition-colors">
+                      <Link to="/master" className="flex items-center gap-2 text-sm text-primary px-4 py-2 rounded-lg hover:bg-primary/10 transition-colors">
                         <Shield size={14} /> Admin Panel
                       </Link>
                     )}
