@@ -54,7 +54,9 @@ const queryClient = new QueryClient({
 const AppRoutes = () => {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <UnderwaterBackground />
+      <AnimatePresence mode="wait">
       <Suspense fallback={<LoadingSpinner />} key={location.pathname}>
         <Routes location={location}>
           <Route path="/" element={<Index />} />
