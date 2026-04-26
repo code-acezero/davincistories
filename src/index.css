@@ -510,6 +510,8 @@ html {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: ink-write 2.4s cubic-bezier(.7,.1,.2,1) forwards;
+  line-height: 1.15;
+  padding-bottom: 0.12em;
 }
 @keyframes ink-write {
   0%   { background-position: 100% 0; filter: blur(2px); }
@@ -520,6 +522,8 @@ html {
 .ink-stroke {
   position: relative;
   display: inline-block;
+  line-height: 1.15;
+  padding-bottom: 0.12em;
 }
 .ink-stroke::after {
   content: "";
