@@ -161,17 +161,17 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-recoleta text-4xl md:text-7xl lg:text-8xl font-normal mb-2 tracking-tight"
+          className="font-recoleta text-[12vw] sm:text-6xl md:text-7xl lg:text-8xl font-normal mb-4 tracking-tight leading-[1.15] pb-2 px-2"
         >
-          <span className="ink-reveal">DaVinci </span>
-          <span className="ink-stroke text-gradient-primary">Stories</span>
+          <span className="ink-reveal inline-block pb-1">DaVinci </span>
+          <span className="ink-stroke text-gradient-primary inline-block pb-1">Stories</span>
         </motion.h1>
 
         {/* Glass surface scratches/droplets */}
         <div className="glass-surface" aria-hidden />
 
         {/* Rotating words with typewriter effect */}
-        <div className="relative h-[1.5em] my-4 md:my-6 overflow-hidden">
+        <div className="relative h-[1.8em] my-4 md:my-6 overflow-visible">
           {words.map((word, i) => (
             <motion.span
               key={word}
@@ -183,7 +183,7 @@ const HeroSection = () => {
                 filter: i === activeIndex ? "blur(0px)" : "blur(4px)",
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="absolute left-1/2 -translate-x-1/2 font-recoleta italic text-[5vw] md:text-4xl lg:text-5xl font-light whitespace-nowrap"
+              className="absolute left-1/2 -translate-x-1/2 top-0 font-recoleta italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light whitespace-nowrap leading-[1.4] px-4"
               style={{ color: "hsl(var(--ocean-teal))" }}
             >
               {word}
