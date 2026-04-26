@@ -18,6 +18,16 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Optional regenerate flag (?force=1 or { force: true } body)
+    const url = new URL(req.url);
+    let force = url.searchParams.get("force") === "1" || url.searchParams.get("force") === "true";
+    if (!force && req.method === "POST") {
+      try {
+        const body = await req.clone().json();
+        if (body?.force === true) force = true;
+      } catch { /* no body */ }
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const admin = createClient(supabaseUrl, serviceKey, {
