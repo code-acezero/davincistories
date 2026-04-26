@@ -9,8 +9,8 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
 };
 
-const ADMIN_EMAIL = "codeacezero@gmail.com";
-const ADMIN_PASSWORD = "Mdazimkhan@2";
+const ADMIN_EMAIL = Deno.env.get("ADMIN_BOOTSTRAP_EMAIL") || "codeacezero@gmail.com";
+const ADMIN_PASSWORD = Deno.env.get("ADMIN_BOOTSTRAP_PASSWORD") || "Mdazimkhan@2";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
