@@ -121,9 +121,20 @@ const SetupManager = () => {
       if (error) throw error;
       return data as BootstrapResult;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       sessionStorage.setItem("admin-bootstrap-result", JSON.stringify(data));
       qc.setQueryData(["bootstrap-status"], data);
+      // Audit log
+      const { data: u } = await supabase.auth.getUser();
+      if (u?.user) {
+        await supabase.from("audit_log").insert({
+          event_type: "admin.bootstrap_regenerated",
+          actor_id: u.user.id,
+          actor_email: u.user.email,
+          target_label: data.email ?? null,
+          metadata: { passwordReset: data.passwordReset, created: data.created },
+        });
+      }
       toast({
         title: "Bootstrap regenerated",
         description: data.passwordReset

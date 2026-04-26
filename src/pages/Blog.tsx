@@ -5,17 +5,24 @@ import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const OG_IMAGE = "https://davincistories.lovable.app/images/og-cover.jpg";
 
 const Blog = () => {
+  const [searchParams] = useSearchParams();
+  const { isAdmin, isModerator } = useAuth();
+  const previewMode = searchParams.get("preview") === "admin" && (isAdmin || isModerator);
+
   const { data: posts } = useQuery({
-    queryKey: ["blog-posts"],
+    queryKey: ["blog-posts", previewMode],
     queryFn: async () => {
-      const { data } = await supabase.from("blog_posts").select("*").eq("is_published", true).order("published_at", { ascending: false });
+      let q = supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+      if (!previewMode) q = q.eq("status", "published").order("published_at", { ascending: false });
+      const { data } = await q;
       return data ?? [];
     },
   });
@@ -38,6 +45,12 @@ const Blog = () => {
       <Header />
       <main className="pt-24 pb-20">
         <section className="container px-4">
+          {previewMode && (
+            <div className="glass-card rounded-xl px-4 py-3 mb-6 max-w-3xl mx-auto border border-amber-500/40 bg-amber-500/10 flex items-center gap-3">
+              <Eye size={16} className="text-amber-300" />
+              <div className="text-xs text-amber-200"><strong>Preview mode</strong> — drafts and review items are visible only to you.</div>
+            </div>
+          )}
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-recoleta text-4xl md:text-6xl text-center mb-4">
             Blog & <span className="text-gradient-teal">Stories</span>
           </motion.h1>
