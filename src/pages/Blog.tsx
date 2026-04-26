@@ -5,17 +5,24 @@ import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const OG_IMAGE = "https://davincistories.lovable.app/images/og-cover.jpg";
 
 const Blog = () => {
+  const [searchParams] = useSearchParams();
+  const { isAdmin, isModerator } = useAuth();
+  const previewMode = searchParams.get("preview") === "admin" && (isAdmin || isModerator);
+
   const { data: posts } = useQuery({
-    queryKey: ["blog-posts"],
+    queryKey: ["blog-posts", previewMode],
     queryFn: async () => {
-      const { data } = await supabase.from("blog_posts").select("*").eq("is_published", true).order("published_at", { ascending: false });
+      let q = supabase.from("blog_posts").select("*").order("created_at", { ascending: false });
+      if (!previewMode) q = q.eq("status", "published").order("published_at", { ascending: false });
+      const { data } = await q;
       return data ?? [];
     },
   });
