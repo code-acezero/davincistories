@@ -86,6 +86,7 @@ const AppRoutes = () => {
             <Route path="categories" element={<AdminCategories />} />
             <Route path="media" element={<AdminMedia />} />
             <Route path="music" element={<AdminMusic />} />
+            <Route path="setup" element={<AdminSetup />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
