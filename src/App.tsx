@@ -42,6 +42,7 @@ const AdminCategories = lazy(() => import("@/pages/admin/CategoriesManager"));
 const AdminMedia = lazy(() => import("@/pages/admin/MediaManager"));
 const AdminMusic = lazy(() => import("@/pages/admin/MusicManager"));
 const AdminSetup = lazy(() => import("@/pages/admin/SetupManager"));
+const AdminAudit = lazy(() => import("@/pages/admin/AuditLog"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -87,6 +88,7 @@ const AppRoutes = () => {
             <Route path="media" element={<AdminMedia />} />
             <Route path="music" element={<AdminMusic />} />
             <Route path="setup" element={<AdminSetup />} />
+            <Route path="audit" element={<AdminAudit />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
