@@ -42,11 +42,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
           setTimeout(() => loadRoles(session.user.id), 0);
+          // Audit log: sign-in events (deduped per session id)
+          if (event === "SIGNED_IN") {
+            const key = `audit-logged-${session.access_token.slice(-12)}`;
+            if (!sessionStorage.getItem(key)) {
+              sessionStorage.setItem(key, "1");
+              const provider = session.user.app_metadata?.provider || "email";
+              const isOAuth = provider !== "email";
+              setTimeout(() => {
+                supabase.from("audit_log").insert({
+                  event_type: isOAuth ? "auth.oauth_success" : "auth.login",
+                  actor_id: session.user.id,
+                  actor_email: session.user.email,
+                  metadata: { provider },
+                }).then(() => {});
+              }, 100);
+            }
+          }
         } else {
           setRoles([]);
         }
