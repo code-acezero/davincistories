@@ -15,6 +15,9 @@ const OG_IMAGE = "https://davincistories.lovable.app/images/og-cover.jpg";
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; index: number } | null>(null);
+  const [searchParams] = useSearchParams();
+  const { isAdmin, isModerator } = useAuth();
+  const previewMode = searchParams.get("preview") === "admin" && (isAdmin || isModerator);
 
   const { data: categories } = useQuery({
     queryKey: ["gallery-categories"],
@@ -22,9 +25,10 @@ const Gallery = () => {
   });
 
   const { data: images } = useQuery({
-    queryKey: ["gallery-images", activeCategory],
+    queryKey: ["gallery-images", activeCategory, previewMode],
     queryFn: async () => {
-      let q = supabase.from("gallery_images").select("*").eq("is_visible", true).order("display_order");
+      let q = supabase.from("gallery_images").select("*").order("display_order");
+      if (!previewMode) q = q.eq("status", "published");
       if (activeCategory) q = q.eq("category_id", activeCategory);
       const { data } = await q;
       return data ?? [];
