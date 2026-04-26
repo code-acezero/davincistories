@@ -1,29 +1,32 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Users, Image, Camera, Briefcase, FileText, CalendarDays, MessageSquare, Settings, Layers, Palette, FolderOpen, LogOut, Menu, X, Music, ShieldCheck, ScrollText } from "lucide-react";
 import { useState } from "react";
 import { safeRedirect } from "@/lib/safeRedirect";
 
-const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, path: "/master" },
-  { label: "Setup & OAuth", icon: ShieldCheck, path: "/master/setup" },
-  { label: "Hero Slides", icon: Layers, path: "/master/hero" },
-  { label: "Team", icon: Users, path: "/master/team" },
-  { label: "Gallery", icon: Image, path: "/master/gallery" },
-  { label: "Categories", icon: Palette, path: "/master/categories" },
-  { label: "Services", icon: Briefcase, path: "/master/services" },
-  { label: "Portfolio", icon: Camera, path: "/master/portfolio" },
-  { label: "Blog", icon: FileText, path: "/master/blog" },
-  { label: "Bookings", icon: CalendarDays, path: "/master/bookings" },
-  { label: "Messages", icon: MessageSquare, path: "/master/messages" },
-  { label: "Music", icon: Music, path: "/master/music" },
-  { label: "Users & Roles", icon: Users, path: "/master/users" },
-  { label: "Media", icon: FolderOpen, path: "/master/media" },
-  { label: "Settings", icon: Settings, path: "/master/settings" },
+type NavItem = { label: string; icon: any; path: string; roles: ("admin" | "moderator")[] };
+
+const navItems: NavItem[] = [
+  { label: "Dashboard", icon: LayoutDashboard, path: "/master", roles: ["admin", "moderator"] },
+  { label: "Setup & OAuth", icon: ShieldCheck, path: "/master/setup", roles: ["admin"] },
+  { label: "Audit Log", icon: ScrollText, path: "/master/audit", roles: ["admin"] },
+  { label: "Hero Slides", icon: Layers, path: "/master/hero", roles: ["admin"] },
+  { label: "Team", icon: Users, path: "/master/team", roles: ["admin"] },
+  { label: "Gallery", icon: Image, path: "/master/gallery", roles: ["admin", "moderator"] },
+  { label: "Categories", icon: Palette, path: "/master/categories", roles: ["admin"] },
+  { label: "Services", icon: Briefcase, path: "/master/services", roles: ["admin"] },
+  { label: "Portfolio", icon: Camera, path: "/master/portfolio", roles: ["admin"] },
+  { label: "Blog", icon: FileText, path: "/master/blog", roles: ["admin", "moderator"] },
+  { label: "Bookings", icon: CalendarDays, path: "/master/bookings", roles: ["admin"] },
+  { label: "Messages", icon: MessageSquare, path: "/master/messages", roles: ["admin"] },
+  { label: "Music", icon: Music, path: "/master/music", roles: ["admin"] },
+  { label: "Users & Roles", icon: Users, path: "/master/users", roles: ["admin"] },
+  { label: "Media", icon: FolderOpen, path: "/master/media", roles: ["admin"] },
+  { label: "Settings", icon: Settings, path: "/master/settings", roles: ["admin"] },
 ];
 
 const AdminLayout = () => {
-  const { user, loading, isAdmin, signOut } = useAuth();
+  const { user, loading, isAdmin, isModerator, signOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -32,26 +35,29 @@ const AdminLayout = () => {
     const safe = safeRedirect(location.pathname, "/master");
     return <Navigate to={`/auth?redirect=${encodeURIComponent(safe)}`} replace />;
   }
-  if (!isAdmin) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-center"><h1 className="font-recoleta text-2xl mb-2">Access Denied</h1><p className="text-muted-foreground">You need admin privileges.</p><Link to="/" className="text-primary hover:underline mt-4 inline-block">Go Home</Link></div></div>;
+  if (!isAdmin && !isModerator) return <div className="min-h-screen flex items-center justify-center bg-background"><div className="text-center"><h1 className="font-recoleta text-2xl mb-2">Access Denied</h1><p className="text-muted-foreground">You need admin or moderator privileges.</p><Link to="/" className="text-primary hover:underline mt-4 inline-block">Go Home</Link></div></div>;
+
+  const visibleNav = navItems.filter(i => i.roles.some(r => (r === "admin" && isAdmin) || (r === "moderator" && isModerator)));
 
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Mobile menu button */}
       <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden fixed top-4 left-4 z-50 glass-card p-2 rounded-xl">
         {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
-      {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 left-0 h-screen w-64 glass-card-strong border-r border-border z-40 flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         <div className="p-6 border-b border-border">
           <Link to="/" className="flex items-center gap-3">
             <img src="/images/logo.png" alt="DaVinci" className="w-8 h-8" />
-            <span className="font-recoleta text-lg">Master Panel</span>
+            <div>
+              <span className="font-recoleta text-lg block leading-tight">Master Panel</span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{isAdmin ? "Admin" : "Moderator"}</span>
+            </div>
           </Link>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {navItems.map(item => {
+          {visibleNav.map(item => {
             const active = location.pathname === item.path;
             return (
               <Link key={item.path} to={item.path} onClick={() => setSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-2.5 rounded-xl mb-1 text-sm transition-all ${active ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"}`}>
@@ -69,10 +75,8 @@ const AdminLayout = () => {
         </div>
       </aside>
 
-      {/* Overlay */}
       {sidebarOpen && <div className="fixed inset-0 bg-background/80 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
-      {/* Main content */}
       <main className="flex-1 min-h-screen lg:pl-0">
         <div className="p-6 lg:p-8 pt-16 lg:pt-8">
           <Outlet />
