@@ -67,6 +67,12 @@ const Gallery = () => {
       <Header />
       <main className="pt-24 pb-20" onKeyDown={handleKeyDown} tabIndex={-1}>
         <section className="container px-4">
+          {previewMode && (
+            <div className="glass-card rounded-xl px-4 py-3 mb-6 max-w-3xl mx-auto border border-amber-500/40 bg-amber-500/10 flex items-center gap-3">
+              <Eye size={16} className="text-amber-300" />
+              <div className="text-xs text-amber-200"><strong>Preview mode</strong> — showing draft & review images. Public visitors won't see these.</div>
+            </div>
+          )}
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-recoleta text-4xl md:text-6xl text-center mb-4">
             Our <span className="text-gradient-primary">Gallery</span>
           </motion.h1>
