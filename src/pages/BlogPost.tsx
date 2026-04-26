@@ -60,6 +60,14 @@ const BlogPost = () => {
       <Header />
       <main className="pt-24 pb-20">
         <article className="container max-w-3xl mx-auto px-4">
+          {previewToken && post && (post as any).status !== "published" && (
+            <div className="glass-card rounded-xl px-4 py-3 mb-6 border border-amber-500/40 bg-amber-500/10 flex items-center gap-3">
+              <Eye size={16} className="text-amber-300" />
+              <div className="text-xs text-amber-200">
+                <strong>Preview mode</strong> — viewing <span className="uppercase">{(post as any).status}</span>. This post is not visible to the public.
+              </div>
+            </div>
+          )}
           <Link to="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 text-sm">
             <ArrowLeft size={16} /> Back to Blog
           </Link>
