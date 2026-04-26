@@ -6,7 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Search, Eye } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const OG_IMAGE = "https://davincistories.lovable.app/images/og-cover.jpg";
 
