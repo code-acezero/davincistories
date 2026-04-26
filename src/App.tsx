@@ -41,6 +41,7 @@ const AdminHero = lazy(() => import("@/pages/admin/HeroManager"));
 const AdminCategories = lazy(() => import("@/pages/admin/CategoriesManager"));
 const AdminMedia = lazy(() => import("@/pages/admin/MediaManager"));
 const AdminMusic = lazy(() => import("@/pages/admin/MusicManager"));
+const AdminSetup = lazy(() => import("@/pages/admin/SetupManager"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
