@@ -4,18 +4,23 @@ import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import { ArrowLeft, Clock, Share2 } from "lucide-react";
+import { ArrowLeft, Clock, Share2, Eye } from "lucide-react";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const previewToken = searchParams.get("preview");
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ["blog-post", slug],
+    queryKey: ["blog-post", slug, previewToken],
     queryFn: async () => {
-      const { data } = await supabase.from("blog_posts").select("*").eq("slug", slug).eq("is_published", true).single();
+      let q = supabase.from("blog_posts").select("*").eq("slug", slug);
+      if (previewToken) q = q.eq("preview_token", previewToken);
+      else q = q.eq("status", "published");
+      const { data } = await q.maybeSingle();
       return data;
     },
     enabled: !!slug,
