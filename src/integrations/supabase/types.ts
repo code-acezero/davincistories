@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json
+          target_id: string | null
+          target_label: string | null
+        }
+        Insert: {
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json
+          target_id?: string | null
+          target_label?: string | null
+        }
+        Update: {
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json
+          target_id?: string | null
+          target_label?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -23,8 +56,12 @@ export type Database = {
           excerpt: string | null
           id: string
           is_published: boolean
+          preview_token: string
           published_at: string | null
           slug: string
+          status: Database["public"]["Enums"]["publish_status"]
+          submitted_at: string | null
+          submitted_by: string | null
           title: string
           updated_at: string
         }
@@ -36,8 +73,12 @@ export type Database = {
           excerpt?: string | null
           id?: string
           is_published?: boolean
+          preview_token?: string
           published_at?: string | null
           slug: string
+          status?: Database["public"]["Enums"]["publish_status"]
+          submitted_at?: string | null
+          submitted_by?: string | null
           title: string
           updated_at?: string
         }
@@ -49,8 +90,12 @@ export type Database = {
           excerpt?: string | null
           id?: string
           is_published?: boolean
+          preview_token?: string
           published_at?: string | null
           slug?: string
+          status?: Database["public"]["Enums"]["publish_status"]
+          submitted_at?: string | null
+          submitted_by?: string | null
           title?: string
           updated_at?: string
         }
@@ -196,6 +241,10 @@ export type Database = {
           id: string
           image_url: string
           is_visible: boolean
+          preview_token: string
+          status: Database["public"]["Enums"]["publish_status"]
+          submitted_at: string | null
+          submitted_by: string | null
           title: string | null
         }
         Insert: {
@@ -206,6 +255,10 @@ export type Database = {
           id?: string
           image_url: string
           is_visible?: boolean
+          preview_token?: string
+          status?: Database["public"]["Enums"]["publish_status"]
+          submitted_at?: string | null
+          submitted_by?: string | null
           title?: string | null
         }
         Update: {
@@ -216,6 +269,10 @@ export type Database = {
           id?: string
           image_url?: string
           is_visible?: boolean
+          preview_token?: string
+          status?: Database["public"]["Enums"]["publish_status"]
+          submitted_at?: string | null
+          submitted_by?: string | null
           title?: string | null
         }
         Relationships: [
@@ -489,6 +546,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "member"
+      publish_status: "draft" | "review" | "published"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -617,6 +675,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "member"],
+      publish_status: ["draft", "review", "published"],
     },
   },
 } as const
