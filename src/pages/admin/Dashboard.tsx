@@ -87,13 +87,12 @@ const Dashboard = () => {
               : "Auto-provisioning admin on startup…"}
           </p>
         </div>
-        <a
-          href="https://supabase.com/dashboard/project/qmeoblfqighimfrcybcl/auth/providers"
-          target="_blank" rel="noreferrer"
-          className="text-sm text-primary hover:underline"
+        <Link
+          to="/master/setup"
+          className="text-sm text-primary hover:underline inline-flex items-center gap-1"
         >
-          Configure Google OAuth →
-        </a>
+          Open setup &amp; OAuth wizard →
+        </Link>
       </div>
 
       {/* Quick actions */}

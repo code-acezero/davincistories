@@ -9,8 +9,8 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
 };
 
-const ADMIN_EMAIL = "codeacezero@gmail.com";
-const ADMIN_PASSWORD = "Mdazimkhan@2";
+const ADMIN_EMAIL = Deno.env.get("ADMIN_BOOTSTRAP_EMAIL") || "codeacezero@gmail.com";
+const ADMIN_PASSWORD = Deno.env.get("ADMIN_BOOTSTRAP_PASSWORD") || "Mdazimkhan@2";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -18,6 +18,16 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Optional regenerate flag (?force=1 or { force: true } body)
+    const url = new URL(req.url);
+    let force = url.searchParams.get("force") === "1" || url.searchParams.get("force") === "true";
+    if (!force && req.method === "POST") {
+      try {
+        const body = await req.clone().json();
+        if (body?.force === true) force = true;
+      } catch { /* no body */ }
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const admin = createClient(supabaseUrl, serviceKey, {
@@ -75,6 +85,17 @@ Deno.serve(async (req) => {
       roleAssigned = true;
     }
 
+    // 3. If forcing regenerate, reset password + confirm email for existing user
+    let passwordReset = false;
+    if (force && !created?.user) {
+      const { error: updErr } = await admin.auth.admin.updateUserById(userId, {
+        password: ADMIN_PASSWORD,
+        email_confirm: true,
+      });
+      if (updErr) throw updErr;
+      passwordReset = true;
+    }
+
     return new Response(
       JSON.stringify({
         ok: true,
@@ -82,6 +103,8 @@ Deno.serve(async (req) => {
         userId,
         created: !!created?.user,
         roleAssigned,
+        passwordReset,
+        forced: force,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
