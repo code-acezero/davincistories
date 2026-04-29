@@ -14,8 +14,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        recoleta: ["Recoleta", "serif"],
-        gordita: ["Gordita", "sans-serif"],
+        recoleta: ["Cormorant Garamond", "Recoleta", "serif"],
+        gordita: ["EB Garamond", "Gordita", "Georgia", "serif"],
+        calligraphy: ["Pinyon Script", "Cormorant Garamond", "cursive"],
+        engraved: ["IM Fell English SC", "Special Elite", "serif"],
+        stamped: ["Special Elite", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
