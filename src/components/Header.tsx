@@ -39,8 +39,8 @@ const Header = () => {
           <nav className={`flex items-center justify-between rounded-2xl px-4 md:px-6 py-2.5 transition-all duration-500 ${isScrolled ? "glass-card-strong shadow-lg" : "glass-card"}`}>
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 group">
-              <img src="/images/logo.png" width={32} height={32} alt="DaVinci" className="group-hover:scale-110 transition-transform duration-300" />
-              <span className="font-recoleta text-base hidden sm:block group-hover:text-primary transition-colors">DaVinci</span>
+              <img src="/images/logo.png" width={32} height={32} alt="DaVinci" className="group-hover:scale-110 transition-transform duration-300" style={{ filter: "sepia(0.3) drop-shadow(0 1px 2px hsl(25 35% 14% / 0.3))" }} />
+              <span className="calligraphy text-xl hidden sm:block group-hover:text-[hsl(var(--burgundy))] transition-colors leading-none">DaVinci</span>
             </Link>
 
             {/* Desktop nav */}
