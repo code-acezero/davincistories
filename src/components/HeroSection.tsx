@@ -91,11 +91,11 @@ const HeroSection = () => {
         const a = p.alpha * (0.6 + 0.4 * Math.sin(p.pulse));
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(216, 75, 102, ${a})`;
+        ctx.fillStyle = `rgba(75, 35, 20, ${a * 0.7})`;
         ctx.fill();
       });
 
-      // Draw connections
+      // Ink filaments connecting nearby particles
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -105,7 +105,7 @@ const HeroSection = () => {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(150, 188, 189, ${0.08 * (1 - dist / 120)})`;
+            ctx.strokeStyle = `rgba(120, 70, 35, ${0.10 * (1 - dist / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
