@@ -41,7 +41,7 @@ const TestimonialsSection = () => {
 
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at 30% 50%, hsl(346 85% 55% / 0.1), transparent 60%)" }} />
+      <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at 30% 50%, hsl(350 55% 32% / 0.12), transparent 60%)" }} />
       <div className="container px-4 relative z-10">
         <div className="text-center mb-14 reveal-up">
           <span className="text-primary text-sm uppercase tracking-[4px] font-medium mb-3 block">Testimonials</span>

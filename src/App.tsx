@@ -55,8 +55,9 @@ const queryClient = new QueryClient({
 
 const AppRoutes = () => {
   const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/master");
   return (
-    <>
+    <div className={isAdmin ? "admin-scope" : "public-scope"}>
       <UnderwaterBackground />
       <AnimatePresence mode="wait">
       <Suspense fallback={<LoadingSpinner />} key={location.pathname}>
@@ -95,7 +96,7 @@ const AppRoutes = () => {
         </Routes>
       </Suspense>
     </AnimatePresence>
-    </>
+    </div>
   );
 };
 

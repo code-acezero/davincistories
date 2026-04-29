@@ -14,8 +14,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        recoleta: ["Recoleta", "serif"],
-        gordita: ["Gordita", "sans-serif"],
+        recoleta: ["Cormorant Garamond", "Recoleta", "serif"],
+        gordita: ["EB Garamond", "Gordita", "Georgia", "serif"],
+        calligraphy: ["Pinyon Script", "Cormorant Garamond", "cursive"],
+        engraved: ["IM Fell English SC", "Special Elite", "serif"],
+        stamped: ["Special Elite", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -68,6 +71,16 @@ export default {
         copper: "hsl(var(--copper))",
         gold: "hsl(var(--gold))",
         "rose-red": "hsl(var(--rose-red))",
+        parchment: "hsl(var(--parchment))",
+        "parchment-deep": "hsl(var(--parchment-deep))",
+        ink: "hsl(var(--ink))",
+        "ink-soft": "hsl(var(--ink-soft))",
+        burgundy: "hsl(var(--burgundy))",
+        forest: "hsl(var(--forest))",
+        brass: "hsl(var(--brass))",
+        "brass-dark": "hsl(var(--brass-dark))",
+        "antique-gold": "hsl(var(--antique-gold))",
+        oxidized: "hsl(var(--oxidized))",
       },
       borderRadius: {
         lg: "var(--radius)",

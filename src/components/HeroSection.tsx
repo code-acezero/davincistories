@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 import LiquidButton from "@/components/ui/LiquidButton";
+import { Gear, CompassRose, BotanicalCorner, InkDivider } from "@/components/ornaments/Ornaments";
 
 const fallbackWords = [
   "Cinematography", "Photography", "Event Coverage", "Landscape Shots",
@@ -90,11 +91,11 @@ const HeroSection = () => {
         const a = p.alpha * (0.6 + 0.4 * Math.sin(p.pulse));
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(216, 75, 102, ${a})`;
+        ctx.fillStyle = `rgba(75, 35, 20, ${a * 0.7})`;
         ctx.fill();
       });
 
-      // Draw connections
+      // Ink filaments connecting nearby particles
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -104,7 +105,7 @@ const HeroSection = () => {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(150, 188, 189, ${0.08 * (1 - dist / 120)})`;
+            ctx.strokeStyle = `rgba(120, 70, 35, ${0.10 * (1 - dist / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -129,23 +130,59 @@ const HeroSection = () => {
 
   return (
     <section ref={sectionRef} id="home" className="relative h-screen flex items-center justify-center text-center overflow-hidden">
-      {/* Video background */}
+      {/* Cinematic video background — sepia-toned, vignetted */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <video ref={videoRef} autoPlay muted loop playsInline className="w-full h-full object-cover opacity-35 will-change-transform scale-110">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover opacity-55 will-change-transform scale-110"
+          style={{ filter: "sepia(0.35) contrast(1.05) saturate(0.8) brightness(0.85)" }}
+        >
           <source src={videoUrl} type="video/mp4" />
         </video>
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(193 75% 7% / 0.5) 0%, hsl(193 79% 19% / 0.4) 40%, hsl(193 75% 7% / 0.95) 100%)" }} />
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 40%, hsl(193 75% 7% / 0.6) 100%)" }} />
+        {/* Aged-paper warm overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, hsl(38 35% 88% / 0.55) 0%, hsl(34 30% 70% / 0.55) 45%, hsl(28 35% 35% / 0.85) 100%)" }} />
+        {/* Cinematic vignette */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 35%, hsl(25 35% 14% / 0.55) 100%)" }} />
+        {/* Underwater light streak */}
+        <div className="absolute inset-0 mix-blend-screen opacity-30" style={{ background: "radial-gradient(ellipse 60% 30% at 30% 10%, hsl(195 50% 70% / 0.45), transparent 60%)" }} />
       </div>
 
-      {/* Particle canvas */}
+      {/* Ink-dust particle canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 z-[1] w-full h-full pointer-events-none" />
 
-      {/* Floating orbs */}
-      <div className="absolute w-[300px] h-[300px] rounded-full bg-primary/8 blur-[120px] top-[15%] right-[10%]" style={{ animation: "float 8s ease-in-out infinite" }} />
-      <div className="absolute w-[200px] h-[200px] rounded-full bg-copper/8 blur-[80px] bottom-[25%] left-[12%]" style={{ animation: "float 6s ease-in-out infinite", animationDelay: "-3s" }} />
+      {/* Soft warm glow orbs (oil lamps through fog) */}
+      <div className="absolute w-[300px] h-[300px] rounded-full blur-[120px] top-[15%] right-[10%]" style={{ background: "hsl(42 65% 50% / 0.18)", animation: "float 8s ease-in-out infinite" }} />
+      <div className="absolute w-[200px] h-[200px] rounded-full blur-[80px] bottom-[25%] left-[12%]" style={{ background: "hsl(350 55% 32% / 0.18)", animation: "float 6s ease-in-out infinite", animationDelay: "-3s" }} />
 
-      <div className="container relative z-[2] px-4">
+      {/* Botanical corner vines (page edges) */}
+      <BotanicalCorner className="absolute top-24 left-6 z-[2] opacity-70" size={140} color="hsl(38 50% 75%)" />
+      <BotanicalCorner className="absolute top-24 right-6 z-[2] opacity-70" size={140} flip color="hsl(38 50% 75%)" />
+      <BotanicalCorner className="absolute bottom-24 left-6 z-[2] opacity-60" size={120} flipY color="hsl(38 50% 75%)" />
+      <BotanicalCorner className="absolute bottom-24 right-6 z-[2] opacity-60" size={120} flip flipY color="hsl(38 50% 75%)" />
+
+      {/* Slow rotating gear in upper-left corner — cinematic clockwork */}
+      <div className="absolute top-32 left-12 z-[2] opacity-30 hidden md:block">
+        <Gear size={86} teeth={14} spin="slow" />
+      </div>
+      <div className="absolute bottom-32 right-12 z-[2] opacity-25 hidden md:block">
+        <Gear size={64} teeth={10} spin="slow" reverse />
+      </div>
+
+      <div className="container relative z-[3] px-4">
+        {/* Stamped eyebrow */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1, duration: 1 }}
+          className="mb-4"
+        >
+          <span className="stamped-label">An Atelier of Light & Memory · Est. 2018</span>
+        </motion.div>
+
         <motion.img
           initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -153,24 +190,25 @@ const HeroSection = () => {
           src="/images/logo-banner.png"
           width={322} height={322}
           alt="DaVinci Stories"
-          className="mx-auto max-w-[80px] md:max-w-[160px] mb-6 drop-shadow-2xl"
+          className="mx-auto max-w-[80px] md:max-w-[150px] mb-5 drop-shadow-2xl"
+          style={{ filter: "sepia(0.3) drop-shadow(0 4px 12px hsl(25 35% 14% / 0.4))" }}
         />
 
-        {/* Ink-writing headline */}
+        {/* Calligraphy + ink-stroke headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-recoleta text-[12vw] sm:text-6xl md:text-7xl lg:text-8xl font-normal mb-4 tracking-tight leading-[1.15] pb-2 px-2"
+          className="text-[12vw] sm:text-6xl md:text-7xl lg:text-8xl font-normal mb-2 tracking-tight leading-[1.15] pb-2 px-2"
         >
-          <span className="ink-reveal inline-block pb-1">DaVinci </span>
-          <span className="ink-stroke text-gradient-primary inline-block pb-1">Stories</span>
+          <span className="ink-headline ink-reveal inline-block pb-1">DaVinci </span>
+          <span className="calligraphy ink-stroke inline-block pb-1 italic" style={{ fontSize: "1.05em" }}>Stories</span>
         </motion.h1>
 
-        {/* Glass surface scratches/droplets */}
-        <div className="glass-surface" aria-hidden />
+        {/* Engraved divider */}
+        <InkDivider className="max-w-md mx-auto my-3" glyph="✦" />
 
-        {/* Rotating words with typewriter effect */}
+        {/* Rotating discipline word */}
         <div className="relative h-[1.8em] my-4 md:my-6 overflow-visible">
           {words.map((word, i) => (
             <motion.span
@@ -183,8 +221,8 @@ const HeroSection = () => {
                 filter: i === activeIndex ? "blur(0px)" : "blur(4px)",
               }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="absolute left-1/2 -translate-x-1/2 top-0 font-recoleta italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light whitespace-nowrap leading-[1.4] px-4"
-              style={{ color: "hsl(var(--ocean-teal))" }}
+              className="absolute left-1/2 -translate-x-1/2 top-0 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light italic whitespace-nowrap leading-[1.4] px-4"
+              style={{ color: "hsl(var(--burgundy))", fontFamily: "Cormorant Garamond, serif" }}
             >
               {word}
             </motion.span>
@@ -195,12 +233,13 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 1 }}
-          className="text-xs md:text-sm font-light uppercase tracking-[5px] md:tracking-[8px] text-foreground/50 mt-2"
+          className="stamped-label mt-2"
+          style={{ fontSize: "0.7rem" }}
         >
           A diary written in light & water
         </motion.p>
 
-        {/* Liquid CTA buttons */}
+        {/* Liquid CTA buttons (now brass+ink in public scope) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -208,26 +247,24 @@ const HeroSection = () => {
           className="mt-10 flex flex-wrap justify-center gap-4"
         >
           <LiquidButton to="/gallery" variant="primary" size="md">
-            View Our Work
+            View the Atelier
           </LiquidButton>
           <LiquidButton to="/booking" variant="ghost" size="md">
-            Book a Session
+            Reserve a Sitting
           </LiquidButton>
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Compass scroll indicator */}
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
         onClick={scrollToContent}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/30 hover:text-primary transition-colors group"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[hsl(var(--brass-dark))] hover:text-[hsl(var(--burgundy))] transition-colors group z-[3]"
       >
-        <span className="text-[10px] uppercase tracking-[3px]">Scroll</span>
-        <div className="w-6 h-10 rounded-full border border-foreground/20 flex justify-center pt-2 group-hover:border-primary/50 transition-colors">
-          <div className="w-1 h-3 rounded-full bg-primary animate-bounce" />
-        </div>
+        <CompassRose size={44} className="opacity-80 group-hover:opacity-100 transition-opacity" />
+        <span className="stamped-label" style={{ fontSize: "0.6rem" }}>Descend</span>
       </motion.button>
     </section>
   );
