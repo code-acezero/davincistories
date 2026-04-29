@@ -38,7 +38,7 @@ const StatsCounter = () => {
 
   return (
     <section ref={ref} className="py-16 md:py-24 relative overflow-hidden">
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent, hsl(193 60% 10% / 0.5), transparent)" }} />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent, hsl(28 35% 60% / 0.35), transparent)" }} />
       <div className="container px-4 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
           {stats.map((stat, i) => {
