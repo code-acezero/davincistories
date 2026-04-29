@@ -123,6 +123,93 @@
     --sidebar-border: 193 30% 18%;
     --sidebar-ring: 346 85% 55%;
   }
+
+  /* ============================================================
+     PUBLIC SITE — Vintage Paper · Steampunk · Underwater Cinema
+     Admin (/master) keeps the original dark teal palette above.
+     ============================================================ */
+  .public-scope {
+    /* Base parchment surface (warm aged paper, slightly cool in shadows) */
+    --background: 38 32% 88%;
+    --foreground: 25 35% 14%;
+
+    --card: 36 30% 84%;
+    --card-foreground: 25 35% 14%;
+
+    --popover: 36 32% 90%;
+    --popover-foreground: 25 35% 14%;
+
+    /* Primary: Deep ink burgundy / dried rose */
+    --primary: 350 55% 32%;
+    --primary-foreground: 38 35% 92%;
+
+    /* Secondary: Antique brass */
+    --secondary: 35 45% 42%;
+    --secondary-foreground: 38 35% 96%;
+
+    --muted: 36 22% 78%;
+    --muted-foreground: 25 20% 32%;
+
+    /* Accent: Forest ink */
+    --accent: 145 28% 24%;
+    --accent-foreground: 38 35% 92%;
+
+    --destructive: 8 65% 38%;
+    --destructive-foreground: 38 35% 92%;
+
+    --border: 30 25% 60%;
+    --input: 36 25% 78%;
+    --ring: 350 55% 32%;
+
+    /* Vintage palette tokens */
+    --parchment: 38 38% 90%;
+    --parchment-deep: 34 30% 78%;
+    --ink: 25 35% 14%;
+    --ink-soft: 25 25% 28%;
+    --burgundy: 350 55% 32%;
+    --forest: 145 28% 24%;
+    --brass: 38 55% 50%;
+    --brass-dark: 32 50% 32%;
+    --antique-gold: 42 65% 58%;
+    --oxidized: 165 25% 38%;
+
+    /* Re-tune water accents toward cinematic blues */
+    --deep-teal: 195 40% 22%;
+    --ocean-teal: 195 30% 50%;
+    --mist-teal: 195 22% 65%;
+    --rose-red: 350 55% 32%;
+    --copper: 24 65% 38%;
+    --gold: 42 65% 58%;
+
+    /* Vellum-glass (paper + wet glass hybrid) */
+    --glass-bg: rgba(252, 240, 218, 0.42);
+    --glass-border: rgba(115, 78, 48, 0.22);
+    --glass-blur: 14px;
+    --glass-highlight: rgba(255, 250, 235, 0.55);
+    --glass-refraction: rgba(255, 255, 255, 0.18);
+    --liquid-tint: rgba(180, 160, 120, 0.10);
+    --ink-color: 350 55% 32%;
+
+    /* Gradients reborn */
+    --gradient-primary: linear-gradient(135deg, hsl(350 55% 32%), hsl(24 65% 38%));
+    --gradient-hero: linear-gradient(180deg, hsl(38 40% 90% / 0.4) 0%, hsl(34 28% 70% / 0.85) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(38 38% 92%), hsl(34 28% 80%));
+    --gradient-teal: linear-gradient(135deg, hsl(145 28% 24%), hsl(35 45% 42%));
+    --gradient-fantasy: linear-gradient(135deg, hsl(350 55% 32% / 0.18), hsl(145 28% 24% / 0.18), hsl(42 65% 58% / 0.18));
+    --gradient-warm: linear-gradient(135deg, hsl(24 65% 38%), hsl(42 65% 58%));
+    --gradient-brass: linear-gradient(135deg, hsl(32 50% 32%), hsl(38 55% 50%) 50%, hsl(42 65% 58%));
+
+    --shadow-glow: 0 0 30px hsl(350 55% 32% / 0.18);
+    --shadow-teal: 0 8px 24px hsl(25 35% 14% / 0.22);
+    --shadow-card:
+      0 1px 0 hsl(38 35% 95% / 0.6) inset,
+      0 14px 30px hsl(25 35% 14% / 0.18),
+      0 2px 6px hsl(25 35% 14% / 0.10);
+
+    color-scheme: light;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
 }
 
 @layer base {
